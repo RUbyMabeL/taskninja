@@ -12,7 +12,8 @@ class ListsController extends Controller
      */
     public function index()
     {
-        //
+        $lists = Lists::all();
+        return $lists;
     }
 
     /**

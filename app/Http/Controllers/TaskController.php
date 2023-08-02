@@ -27,12 +27,15 @@ class TaskController extends Controller
     }
 
     //create new task
-    public function store(Request $request)
+    public function store(User $user, Request $request)
     {
         $task = new Task();
         $task->content = $request->input('content');
-        $task->user_id = $request->input('user_id');
         $task->list_id = $request->input('list_id');
+        $task->due_date = $request->input('due_date');
+        $task->priority = $request->input('priority');
+        $task->completed = false;
+        $task->user_id = $user->id;
         $task->save();
 
         return response()->json($task, 201);
@@ -42,8 +45,10 @@ class TaskController extends Controller
     public function update(User $user, Task $task, Request $request)
     {
         $task->content = $request->input('content');
-        $task->user_id = $request->input('user_id');
         $task->list_id = $request->input('list_id');
+        $task->due_date = $request->input('due_date');
+        $task->priority = $request->input('priority');
+        $task->completed = $request->input('completed');
         $task->save();
 
         return response()->json($task, 200);

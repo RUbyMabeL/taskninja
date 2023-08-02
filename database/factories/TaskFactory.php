@@ -19,7 +19,10 @@ class TaskFactory extends Factory
         return [
             'content' => $this->faker->sentence(5),
             'user_id' => $this->faker->numberBetween(1, 10),
-            'list_id' => $this->faker->numberBetween(1, 5)
+            'list_id' => $this->faker->numberBetween(1, 5),
+            'due_date' => $this->faker->date(),
+            'priority' => $this->faker->word(),
+            'completed' => $this->faker->boolean(false)
         ];
     }
 }
