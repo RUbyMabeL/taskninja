@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Lists;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
@@ -12,6 +13,6 @@ class ListsSeeder extends Seeder
      */
     public function run(): void
     {
-        //
+        Lists::factory()->count(10)->create();
     }
 }
