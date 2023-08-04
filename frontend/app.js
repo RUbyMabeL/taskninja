@@ -14,10 +14,17 @@ const app = Vue.createApp({
         password: ''
       },
       taskForm: {
-        content: ''
+        content: '',
+        list_id: '',
+        due_date: '',
+        priority: ''
       },
       editForm: {
-        content: ''
+        content: '',
+        list_id: '',
+        due_date: '',
+        priority: '',
+        completed: ''
       }
     }
   },
@@ -82,7 +89,7 @@ const app = Vue.createApp({
         })
 
         const json = await response.json()
-        this.notes.push(json)
+        this.tasks.push(json)
         this.showNewTask = false
 
       } catch (error) {
