@@ -96,8 +96,36 @@ const app = Vue.createApp({
         console.log(error)
       }
     },
-    editTask: function (task) {
+    editTask: async function () {
+      try {
+        //url: baseUrl/api/users/id/notes
+        const response = await fetch(`${baseUrl}/api/users/${this.user.id}/tasks/${this.task.id}`, {
+          method: 'put',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${this.token}`
+          },
+          body: JSON.stringify(this.editForm)
+        })
 
+        const json = await response.json()
+        var allTasks = this.tasks
+        for (let i = 0; i < allTasks.length; i++) {
+          if (allTasks[i].id === json.id) {
+            allTasks[i].content = json.content;
+            allTasks[i].due_date = json.due_date;
+            allTasks[i].priority = json.priority;
+            allTasks[i].list_id = json.list_id;
+            allTasks[i].completed = json.completed;
+          }
+        }
+
+        // this.tasks.push(json)
+        this.showEditTask = false
+
+      } catch (error) {
+        console.log(error)
+      }
     },
     updateTask: async function () {
 

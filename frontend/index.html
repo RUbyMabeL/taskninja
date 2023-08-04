@@ -27,14 +27,19 @@
       <div class="col-12 col-xl-6 p-3" v-for="task in tasks">
         <div class="card">
           <div class="card-header d-flex justify-content-between p-3">
-            <h4 class="">{{ task.title }}</h4>
             <div class="d-flex align-items-center">
-              <button class="btn btn-outline-secondary me-3" @click="editTask(task)">Edit</button>
-              <button class="btn btn-outline-danger" @click="deleteTask(task)">Delete</button>
+              <button class="btn btn-outline-secondary me-3" @click="showEditTask = true">Edit</button>
+              <button class=" btn btn-outline-danger" @click="deleteTask(task)">Delete</button>
+            </div>
+            <div class="d-flex align-items-center">
+              <button class="btn btn-outline-warning me-3">{{ task.list_id }}</button>
             </div>
           </div>
           <div class="card-body">
-            <p class="card-text">{{ task.content }}</p>
+            <p class="card-text">Task: {{ task.content }}</p>
+            <p class="card-text">Priority: {{ task.priority }}</p>
+            <p class="card-text">Due Date: {{ task.due_date }}</p>
+            <p class="card-text">Completed: {{ task.completed }}</p>
           </div>
         </div>
       </div>
@@ -68,16 +73,35 @@
           </div>
           <div class="modal-body">
             <form @submit.prevent="addTask">
+
               <div class="form-group mb-3">
-                <label class="form-label" for="title">
-                  Content
-                </label>
-                <input type="text" id="title" class="form-control" v-model="taskForm.title">
+                <label class="form-label" for="content">Task Content</label>
+                <textarea id="content" class="form-control" v-model="taskForm.content"></textarea>
               </div>
 
               <div class="form-group mb-3">
-                <label class="form-label" for="content">Content</label>
-                <textarea id="content" class="form-control" v-model="taskForm.content"></textarea>
+                <label class="form-label" for="list_id">List</label>
+                <select class="form-select" v-model="taskForm.list_id" id="list_id">
+                  <!-- <option selected>Choose a list</option> -->
+                  <option value="1">One</option>
+                  <option value="2">Two</option>
+                  <option value="3">Three</option>
+                </select>
+              </div>
+
+              <div class="form-group mb-3">
+                <label class="form-label" for="due_date">Due Date</label>
+                <input type="date" id="due_date" class="form-control" v-model="taskForm.due_date">
+              </div>
+
+              <div class="form-group mb-3">
+                <label class="form-label" for="priority">Priority</label>
+                <select class="form-select" v-model="taskForm.priority" id="priority">
+                  <!-- <option selected>Choose a priority</option> -->
+                  <option value="high">High</option>
+                  <option value="medium">Medium</option>
+                  <option value="low">Low</option>
+                </select>
               </div>
 
               <button type="submit" class="btn btn-primary">Add Task</button>
@@ -98,15 +122,38 @@
           <div class="modal-body">
             <form @submit.prevent="updateTask">
               <div class="form-group mb-3">
-                <label class="form-label" for="title">
-                  Title
-                </label>
-                <input type="text" id="title" class="form-control" v-model="editForm.title">
+                <label class="form-label" for="content">Task Content</label>
+                <textarea id="content" class="form-control" v-model="editForm.content"></textarea>
               </div>
 
               <div class="form-group mb-3">
-                <label class="form-label" for="content">Content</label>
-                <textarea id="content" class="form-control" v-model="editForm.content"></textarea>
+                <label class="form-label" for="list_id">List</label>
+                <select class="form-select" v-model="editForm.list_id" id="list_id">
+                  <!-- <option selected>Choose a list</option> -->
+                  <option value="1">One</option>
+                  <option value="2">Two</option>
+                  <option value="3">Three</option>
+                </select>
+              </div>
+
+              <div class="form-group mb-3">
+                <label class="form-label" for="due_date">Due Date</label>
+                <input type="date" id="due_date" class="form-control" v-model="editForm.due_date">
+              </div>
+
+              <div class="form-group mb-3">
+                <label class="form-label" for="priority">Priority</label>
+                <select class="form-select" v-model="editForm.priority" id="priority">
+                  <!-- <option selected>Choose a priority</option> -->
+                  <option value="high">High</option>
+                  <option value="medium">Medium</option>
+                  <option value="low">Low</option>
+                </select>
+              </div>
+
+              <div class="form-group mb-3">
+                <label class="form-label" for="completed">Complete Status</label>
+                <input class="form-check-input" type="checkbox" value="" id="completed">
               </div>
 
               <button type="submit" class="btn btn-primary">Update Task</button>
