@@ -20,6 +20,7 @@ const app = Vue.createApp({
         priority: ''
       },
       editForm: {
+        id: '',
         content: '',
         list_id: '',
         due_date: '',
@@ -96,10 +97,14 @@ const app = Vue.createApp({
         console.log(error)
       }
     },
-    editTask: async function () {
+    editTask: async function (task) {
+      this.showEditTask = true
+      this.editForm = { ...task }
+    },
+    updateTask: async function () {
       try {
         //url: baseUrl/api/users/id/notes
-        const response = await fetch(`${baseUrl}/api/users/${this.user.id}/tasks/${this.task.id}`, {
+        const response = await fetch(`${baseUrl}/api/users/${this.user.id}/tasks/${this.editForm.id}`, {
           method: 'put',
           headers: {
             'Content-Type': 'application/json',
@@ -109,6 +114,7 @@ const app = Vue.createApp({
         })
 
         const json = await response.json()
+        // this.tasks = await response.json()
         var allTasks = this.tasks
         for (let i = 0; i < allTasks.length; i++) {
           if (allTasks[i].id === json.id) {
@@ -127,16 +133,25 @@ const app = Vue.createApp({
         console.log(error)
       }
     },
-    updateTask: async function () {
-
-    },
     deleteTask: async function (task) {
+      try {
+        //url: baseUrl/api/users/id/notes
+        const response = await fetch(`${baseUrl}/api/users/${this.user.id}/tasks/${task.id}`, {
+          method: 'delete',
+          headers: {
+            'Authorization': `Bearer ${this.token}`
+          },
+        })
+        this.tasks.splice(this.tasks.findIndex(a => a.id === task.id), 1)
 
+      } catch (error) {
+        console.log(error)
+      }
     },
     logout: async function () {
-
+      this.token = ''
+      this.user = {}
     }
-
   }
 })
 
