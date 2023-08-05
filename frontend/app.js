@@ -231,6 +231,21 @@ const app = Vue.createApp({
         console.log(error)
       }
     },
+    deleteList: async function (list_id) {
+      try {
+        const response = await fetch(`${baseUrl}/api/users/${this.user.id}/lists/${list_id}`, {
+          method: 'delete',
+          headers: {
+            'Authorization': `Bearer ${this.token}`
+          },
+        })
+        this.lists.splice(this.lists.findIndex(a => a.id === list_id), 1)
+        this.showEditList = false;
+
+      } catch (error) {
+        console.log(error)
+      }
+    },
     logout: async function () {
       this.token = ''
       this.user = {}
