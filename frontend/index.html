@@ -24,13 +24,13 @@
 
     <!-- Dispaly Lists -->
     <div class="row ms-5 mb-3" v-if="token" >
-      <div class="col-6">
-        <div class="btn-group " role="group" aria-label="Lists" v-for="list in lists">     
+      <div class="col-12">
+        <div class="btn-group me-3" role="group" aria-label="Lists" v-for="list in lists">     
           <button type="button" class="btn btn-outline-primary">{{ list.name }}</button>
+          <button type="button" class="btn btn-outline-primary" @click="editList(list)">✏</button>
         </div>
         <div class="col mt-3">
-          <button class="btn btn-outline-primary me-3" @click="showNewList = true" v-if="token">New List ➕</button>
-          <button class="btn btn-outline-primary" v-if="token" @click="">Edit Lists ✏</button>
+          <button class="btn btn-primary me-3 btn-sm" @click="showNewList = true" v-if="token">New List 📜</button>
         </div>
       </div>
 
@@ -195,6 +195,28 @@
               </div>
 
               <button type="submit" class="btn btn-primary">Update Task</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Edit List Modal and Form -->
+    <div class="modal" tabindex="-1" :class="{'d-block pt-5 show bg-dark bg-opacity-75': showEditList}">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Edit List</h5>
+            <button type="button" class="btn-close" aria-label="Close" @click="showEditList = false"></button>
+          </div>
+          <div class="modal-body">
+            <form @submit.prevent="updateList">
+              <input id="id" class="form-control" v-model="editListForm.id" type="hidden">
+              <div class="form-group mb-3">
+                <label class="form-label" for="name">List Name</label>
+                <input type="text" id="name" class="form-control" v-model="editListForm.name">
+              </div>
+              <button type="submit" class="btn btn-primary">Update List</button>
             </form>
           </div>
         </div>

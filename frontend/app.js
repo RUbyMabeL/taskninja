@@ -33,6 +33,11 @@ const app = Vue.createApp({
         due_date: '',
         priority: '',
         completed: ''
+      },
+      editListForm: {
+        id: '',
+        name: '',
+        user_id: ''
       }
     }
   },
@@ -112,7 +117,6 @@ const app = Vue.createApp({
     },
     updateTask: async function () {
       try {
-        //url: baseUrl/api/users/id/notes
         const response = await fetch(`${baseUrl}/api/users/${this.user.id}/tasks/${this.editForm.id}`, {
           method: 'put',
           headers: {
@@ -197,7 +201,36 @@ const app = Vue.createApp({
         console.log(error)
       }
     },
+    editList: async function (list) {
+      this.showEditList = true
+      this.editListForm = { ...list }
+    },
+    updateList: async function () {
+      try {
+        this.editListForm.user_id = this.user.id
+        //url: baseUrl/api/users/id/notes
+        const response = await fetch(`${baseUrl}/api/users/${this.user.id}/lists/${this.editListForm.id}`, {
+          method: 'put',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${this.token}`
+          },
+          body: JSON.stringify(this.editListForm)
+        })
 
+        const json = await response.json()
+        var allLists = this.lists
+        for (let i = 0; i < allLists.length; i++) {
+          if (allLists[i].id === json.id) {
+            allLists[i].name = json.name;
+          }
+        }
+        this.showEditList = false
+
+      } catch (error) {
+        console.log(error)
+      }
+    },
     logout: async function () {
       this.token = ''
       this.user = {}
