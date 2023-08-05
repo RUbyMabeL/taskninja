@@ -13,4 +13,9 @@ class Task extends Model
     {
         return $this->belongsTo(User::class);
     }
+
+    public function list()
+    {
+        return $this->belongsTo(Lists::class);
+    }
 }
