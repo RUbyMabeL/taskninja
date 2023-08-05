@@ -22,5 +22,3 @@ Route::middleware(['auth:sanctum'])->group(function () {
     //any route here is protected
     Route::apiResource('users.tasks', TaskController::class);
 });
-
-// Route::apiResource('users.tasks', TaskController::class);

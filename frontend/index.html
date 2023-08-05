@@ -22,6 +22,21 @@
       </div>
     </div>
 
+    <!-- Dispaly Lists -->
+    <div class="row ms-5 mb-3" v-if="token" >
+      <div class="col-6">
+        <div class="btn-group " role="group" aria-label="Lists">
+          <button type="button" class="btn btn-outline-primary">Left</button>
+          <button type="button" class="btn btn-outline-primary">Middle</button>
+          <button type="button" class="btn btn-outline-primary">Right</button>
+        </div>
+        <div class="col mt-3">
+          <button class="btn btn-outline-primary me-3" @click="" v-if="token">New List ➕</button>
+          <button class="btn btn-outline-primary" v-if="token" @click="">Edit Lists ✏</button>
+        </div>
+      </div>
+
+    </div>
     <!-- Display Tasks if user is logged in -->
     <div class="row" v-if="token">
       <div class="col-12 col-xl-6 p-3" v-for="task in tasks">

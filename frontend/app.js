@@ -7,6 +7,7 @@ const app = Vue.createApp({
       token: '',
       user: {},
       tasks: [],
+      lists:[],
       showNewTask: false,
       showEditTask: false,
       loginForm: {
@@ -58,6 +59,7 @@ const app = Vue.createApp({
         console.log(error)
       }
     },
+    // Tasks CRUD
     getTasks: async function () {
       try {
         if (this.user.id && this.token) {
@@ -148,6 +150,26 @@ const app = Vue.createApp({
         console.log(error)
       }
     },
+
+    // Lists CRUD
+    getLists: async function () {
+      try {
+        if (this.user.id && this.token) {
+          const response = await fetch(`${baseUrl}/api/users/${this.user.id}/tasks`, {
+            method: 'get',
+            headers: {
+              'Accept': 'application/json',
+              'Authorization': `Bearer ${this.token}`
+            }
+          })
+
+          this.tasks = await response.json()
+        }
+      } catch (error) {
+        console.log(error)
+      }
+    },
+
     logout: async function () {
       this.token = ''
       this.user = {}
