@@ -25,13 +25,11 @@
     <!-- Dispaly Lists -->
     <div class="row ms-5 mb-3" v-if="token" >
       <div class="col-6">
-        <div class="btn-group " role="group" aria-label="Lists">
-          <button type="button" class="btn btn-outline-primary">Left</button>
-          <button type="button" class="btn btn-outline-primary">Middle</button>
-          <button type="button" class="btn btn-outline-primary">Right</button>
+        <div class="btn-group " role="group" aria-label="Lists" v-for="list in lists">     
+          <button type="button" class="btn btn-outline-primary">{{ list.name }}</button>
         </div>
         <div class="col mt-3">
-          <button class="btn btn-outline-primary me-3" @click="" v-if="token">New List ➕</button>
+          <button class="btn btn-outline-primary me-3" @click="showNewList = true" v-if="token">New List ➕</button>
           <button class="btn btn-outline-primary" v-if="token" @click="">Edit Lists ✏</button>
         </div>
       </div>
@@ -125,6 +123,27 @@
         </div>
       </div>
     </div>
+
+    <!-- New List Modal and Form -->
+        <div class="modal" tabindex="-1" :class="{'d-block pt-5 show bg-dark bg-opacity-75': showNewList}">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title">New List</h5>
+                <button type="button" class="btn-close" aria-label="Close" @click="showNewList = false"></button>
+              </div>
+              <div class="modal-body">
+                <form @submit.prevent="addList">
+                  <div class="form-group mb-3">
+                    <label class="form-label" for="content">List Name</label>
+                    <input type="text" id="name" class="form-control" v-model="listForm.name">
+                  </div>
+                  <button type="submit" class="btn btn-primary">Add List</button>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
 
     <!-- Edit Task Modal and Form -->
     <div class="modal" tabindex="-1" :class="{'d-block pt-5 show bg-dark bg-opacity-75': showEditTask}">

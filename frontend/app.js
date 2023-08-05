@@ -7,9 +7,11 @@ const app = Vue.createApp({
       token: '',
       user: {},
       tasks: [],
-      lists:[],
+      lists: [],
       showNewTask: false,
       showEditTask: false,
+      showNewList: false,
+      showEditList:false,
       loginForm: {
         email: '',
         password: ''
@@ -19,6 +21,10 @@ const app = Vue.createApp({
         list_id: '',
         due_date: '',
         priority: ''
+      },
+      listForm: {
+        user_id: '',
+        name: ''
       },
       editForm: {
         id: '',
@@ -35,6 +41,7 @@ const app = Vue.createApp({
     this.user = JSON.parse(sessionStorage.getItem('user') || {})
 
     this.getTasks()
+    this.getLists()
   },
   methods: {
     login: async function () {
@@ -155,7 +162,7 @@ const app = Vue.createApp({
     getLists: async function () {
       try {
         if (this.user.id && this.token) {
-          const response = await fetch(`${baseUrl}/api/users/${this.user.id}/tasks`, {
+          const response = await fetch(`${baseUrl}/api/users/${this.user.id}/lists`, {
             method: 'get',
             headers: {
               'Accept': 'application/json',
@@ -163,8 +170,29 @@ const app = Vue.createApp({
             }
           })
 
-          this.tasks = await response.json()
+          this.lists = await response.json()
         }
+      } catch (error) {
+        console.log(error)
+      }
+    },
+    addList: async function () {
+      try {
+        this.listForm.user_id = this.user.id;
+        const response = await fetch(`${baseUrl}/api/users/${this.user.id}/lists`, {
+          method: 'post',
+          headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+            'Authorization': `Bearer ${this.token}`
+          },
+          body: JSON.stringify(this.listForm)
+        })
+
+        const json = await response.json()
+        this.lists.push(json)
+        this.showNewList = false
+
       } catch (error) {
         console.log(error)
       }
