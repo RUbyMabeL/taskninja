@@ -163,10 +163,7 @@
               <div class="form-group mb-3">
                 <label class="form-label" for="list_id">List</label>
                 <select class="form-select" v-model="editForm.list_id" id="list_id">
-                  <!-- <option selected>Choose a list</option> -->
-                  <option value="1">One</option>
-                  <option value="2">Two</option>
-                  <option value="3">Three</option>
+                  <option v-for="list in lists" :value="list.id" :key="list.id">{{list.name}}</option>
                 </select>
               </div>
 

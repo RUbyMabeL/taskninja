@@ -105,6 +105,12 @@ const app = Vue.createApp({
 
         const json = await response.json()
         this.tasks.push(json)
+        // clear the taskform
+        this.taskForm.content = ''
+        this.taskForm.due_date = ''
+        this.taskForm.priority = ''
+        this.taskForm.list_id = ''
+                
         this.showNewTask = false
 
       } catch (error) {
@@ -127,7 +133,7 @@ const app = Vue.createApp({
         })
 
         const json = await response.json()
-        // this.tasks = await response.json()
+        // update the specific task
         var allTasks = this.tasks
         for (let i = 0; i < allTasks.length; i++) {
           if (allTasks[i].id === json.id) {
@@ -138,8 +144,6 @@ const app = Vue.createApp({
             allTasks[i].completed = json.completed;
           }
         }
-
-        // this.tasks.push(json)
         this.showEditTask = false
 
       } catch (error) {
@@ -194,6 +198,10 @@ const app = Vue.createApp({
 
         const json = await response.json()
         this.lists.push(json)
+
+        // clear the lisrform
+        this.listForm.name = ''
+
         this.showNewList = false
 
       } catch (error) {
@@ -218,12 +226,14 @@ const app = Vue.createApp({
         })
 
         const json = await response.json()
+        // update the specific list
         var allLists = this.lists
         for (let i = 0; i < allLists.length; i++) {
           if (allLists[i].id === json.id) {
             allLists[i].name = json.name;
           }
         }
+
         this.showEditList = false
 
       } catch (error) {
