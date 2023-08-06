@@ -64,11 +64,11 @@
         <form class="form bg-light border border-1 p-5" @submit.prevent="login">
           <div class="form-group mb-3">
             <label for="email" class="form-label">Email</label>
-            <input id="email" type="email" class="form-control" v-model="loginForm.email">
+            <input id="email" type="email" class="form-control" v-model="loginForm.email" required>
           </div>
           <div class="form-group mb-3">
             <label for="password" class="form-label">Password</label>
-            <input id="password" type="password" class="form-control" v-model="loginForm.password">
+            <input id="password" type="password" class="form-control" v-model="loginForm.password" required>
           </div>
 
           <button type="submit" class="btn btn-primary">Log in</button>
@@ -89,24 +89,24 @@
 
               <div class="form-group mb-3">
                 <label class="form-label" for="content">Task Content</label>
-                <textarea id="content" class="form-control" v-model="taskForm.content"></textarea>
+                <textarea id="content" class="form-control" v-model="taskForm.content" required></textarea>
               </div>
 
               <div class="form-group mb-3">
                 <label class="form-label" for="list_id">List</label>
-                <select class="form-select" v-model="taskForm.list_id" id="list_id" >
+                <select class="form-select" v-model="taskForm.list_id" id="list_id" required>
                   <option v-for="list in lists" :value="list.id" :key="list.id">{{list.name}}</option>
                 </select>
               </div>
 
               <div class="form-group mb-3">
                 <label class="form-label" for="due_date">Due Date</label>
-                <input type="date" id="due_date" class="form-control" v-model="taskForm.due_date">
+                <input type="date" id="due_date" class="form-control" v-model="taskForm.due_date" required>
               </div>
 
               <div class="form-group mb-3">
                 <label class="form-label" for="priority">Priority</label>
-                <select class="form-select" v-model="taskForm.priority" id="priority">
+                <select class="form-select" v-model="taskForm.priority" id="priority" required>
                   <!-- <option selected>Choose a priority</option> -->
                   <option value="high">High</option>
                   <option value="medium">Medium</option>
@@ -133,7 +133,7 @@
                 <form @submit.prevent="addList">
                   <div class="form-group mb-3">
                     <label class="form-label" for="content">List Name</label>
-                    <input type="text" id="name" class="form-control" v-model="listForm.name">
+                    <input type="text" id="name" class="form-control" v-model="listForm.name" required>
                   </div>
                   <button type="submit" class="btn btn-primary">Add List</button>
                 </form>
@@ -157,24 +157,24 @@
 
               <div class="form-group mb-3">
                 <label class="form-label" for="content">Task Content</label>
-                <textarea id="content" class="form-control" v-model="editForm.content"></textarea>
+                <textarea id="content" class="form-control" v-model="editForm.content" required></textarea>
               </div>
 
               <div class="form-group mb-3">
                 <label class="form-label" for="list_id">List</label>
-                <select class="form-select" v-model="editForm.list_id" id="list_id">
+                <select class="form-select" v-model="editForm.list_id" id="list_id" required>
                   <option v-for="list in lists" :value="list.id" :key="list.id">{{list.name}}</option>
                 </select>
               </div>
 
               <div class="form-group mb-3">
                 <label class="form-label" for="due_date">Due Date</label>
-                <input type="date" id="due_date" class="form-control" v-model="editForm.due_date">
+                <input type="date" id="due_date" class="form-control" v-model="editForm.due_date" required>
               </div>
 
               <div class="form-group mb-3">
                 <label class="form-label" for="priority">Priority</label>
-                <select class="form-select" v-model="editForm.priority" id="priority">
+                <select class="form-select" v-model="editForm.priority" id="priority" required>
                   <!-- <option selected>Choose a priority</option> -->
                   <option value="high">High</option>
                   <option value="medium">Medium</option>
