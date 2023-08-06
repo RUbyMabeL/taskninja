@@ -146,16 +146,16 @@ const app = Vue.createApp({
         console.log(error)
       }
     },
-    deleteTask: async function (task) {
+    deleteTask: async function (task_id) {
       try {
         //url: baseUrl/api/users/id/notes
-        const response = await fetch(`${baseUrl}/api/users/${this.user.id}/tasks/${task.id}`, {
+        const response = await fetch(`${baseUrl}/api/users/${this.user.id}/tasks/${task_id}`, {
           method: 'delete',
           headers: {
             'Authorization': `Bearer ${this.token}`
           },
         })
-        this.tasks.splice(this.tasks.findIndex(a => a.id === task.id), 1)
+        this.tasks.splice(this.tasks.findIndex(a => a.id === task_id), 1)
 
       } catch (error) {
         console.log(error)
@@ -239,7 +239,12 @@ const app = Vue.createApp({
             'Authorization': `Bearer ${this.token}`
           },
         })
+        // delete the list
         this.lists.splice(this.lists.findIndex(a => a.id === list_id), 1)
+
+        // delete all the tasks that belongs to the list
+
+
         this.showEditList = false;
 
       } catch (error) {
