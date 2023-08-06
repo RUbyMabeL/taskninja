@@ -148,7 +148,6 @@ const app = Vue.createApp({
     },
     deleteTask: async function (task_id) {
       try {
-        //url: baseUrl/api/users/id/notes
         const response = await fetch(`${baseUrl}/api/users/${this.user.id}/tasks/${task_id}`, {
           method: 'delete',
           headers: {
@@ -239,11 +238,22 @@ const app = Vue.createApp({
             'Authorization': `Bearer ${this.token}`
           },
         })
+        
+        // get ids of all the tasks that belongs to the list
+        let deleteTasksIds = [];
+        for(let task of this.tasks){
+          if(task.list_id === list_id){
+            deleteTasksIds.push(task.id);
+          }
+        }
+        console.log(deleteTasksIds);
+        // delete all the tasks of current list
+        for(let taskId of deleteTasksIds){
+          this.deleteTask(taskId);
+        }
+
         // delete the list
         this.lists.splice(this.lists.findIndex(a => a.id === list_id), 1)
-
-        // delete all the tasks that belongs to the list
-
 
         this.showEditList = false;
 
