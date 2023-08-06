@@ -45,7 +45,7 @@
               <button class=" btn btn-outline-danger" @click="deleteTask(task.id)">Delete</button>
             </div>
             <div class="d-flex align-items-center">
-              <button class="btn btn-outline-warning me-3">{{ task.list_id }}</button>
+              <button class="btn btn-outline-warning me-3">{{ getListName(task.list_id) }}</button>
             </div>
           </div>
           <div class="card-body">
@@ -94,11 +94,8 @@
 
               <div class="form-group mb-3">
                 <label class="form-label" for="list_id">List</label>
-                <select class="form-select" v-model="taskForm.list_id" id="list_id">
-                  <!-- <option selected>Choose a list</option> -->
-                  <option value="1">One</option>
-                  <option value="2">Two</option>
-                  <option value="3">Three</option>
+                <select class="form-select" v-model="taskForm.list_id" id="list_id" >
+                  <option v-for="list in lists" :value="list.id" :key="list.id">{{list.name}}</option>
                 </select>
               </div>
 

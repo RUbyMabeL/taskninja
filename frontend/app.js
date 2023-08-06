@@ -264,6 +264,10 @@ const app = Vue.createApp({
     logout: async function () {
       this.token = ''
       this.user = {}
+    },
+    getListName(listId) {
+      const list = this.lists.find(list => list.id === listId);
+      return list ? list.name : 'List Not Found';
     }
   }
 })
