@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Lists;
 use Illuminate\Http\Request;
+use App\Models\User;
+use Illuminate\Support\Facades\Auth;
 
 class ListsController extends Controller
 {
@@ -13,54 +15,37 @@ class ListsController extends Controller
     public function index()
     {
         $lists = Lists::all();
-        return $lists;
+        return  $lists;
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
+    public function show(Lists $list)
     {
-        //
+        return response()->json($list, 200);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
+    public function store(User $user, Request $request)
     {
-        //
+        $list = new Lists();
+        $list->user_id = $request->input('user_id');
+        $list->name = $request->input('name');
+        $list->save();
+
+        return response()->json($list, 201);
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(Lists $lists)
+    public function update(User $user, Lists $list, Request $request)
     {
-        //
+        $list->user_id = $request->input('user_id');
+        $list->name = $request->input('name');
+        $list->save();
+
+        return response()->json($list, 200);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Lists $lists)
+    public function destroy(User $user, Lists $list)
     {
-        //
-    }
+        $list->delete();
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, Lists $lists)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Lists $lists)
-    {
-        //
+        return response()->json($list, 200);
     }
 }
