@@ -5,10 +5,8 @@ const app = Vue.createApp({
     return {
       title: 'TaskNinja',
       token: '',
-      priorities: [],
       user: {},
       tasks: [],
-      prioritiesMap: {},
       lists: [],
       showNewTask: false,
       showEditTask: false,
@@ -28,7 +26,7 @@ const app = Vue.createApp({
         content: '',
         list_id: '',
         due_date: '',
-        priority_id: ''
+        priority: ''
       },
       listForm: {
         user_id: '',
@@ -39,7 +37,7 @@ const app = Vue.createApp({
         content: '',
         list_id: '',
         due_date: '',
-        priority_id: '',
+        priority: '',
         completed: ''
       },
       editListForm: {
@@ -52,10 +50,9 @@ const app = Vue.createApp({
   created: async function () {
     this.token = sessionStorage.getItem('token') || ''
     this.user = JSON.parse(sessionStorage.getItem('user') || {})
-    await this.fetchPriorities();
+
     this.getTasks()
     this.getLists()
-
   },
   methods: {
     login: async function () {
@@ -120,36 +117,6 @@ const app = Vue.createApp({
         console.log(error)
       }
     },
-    fetchPriorities: async function() {
-      try {
-          const response = await fetch(`${baseUrl}/api/priorities`, {
-              method: 'get',
-              headers: {
-                  'Accept': 'application/json'
-              }
-          });
-  
-          const prioritiesData = await response.json();
-  
-         
-          this.priorities = prioritiesData;
-  
-          this.prioritiesMap = {};
-          prioritiesData.forEach(priority => {
-              this.prioritiesMap[priority.id] = priority.level;
-          });
-          console.log("Mapped priorities:", this.prioritiesMap); 
-  
-      } catch (error) {
-          console.log('Error fetching priorities:', error);
-      }
-  },
-  getPriorityName: function(priorityId) {
-      return this.prioritiesMap[priorityId] || "Unknown";
-  },
-
-
-  
     addTask: async function () {
       try {
         //url: baseUrl/api/users/id/notes
@@ -162,8 +129,6 @@ const app = Vue.createApp({
           },
           body: JSON.stringify(this.taskForm)
         })
-        console.log('Submitting task:', this.taskForm);
-
 
         const json = await response.json()
         this.tasks.push(json)
@@ -179,8 +144,6 @@ const app = Vue.createApp({
         console.log(error)
       }
     },
-
-
     editTask: async function (task) {
       this.showEditTask = true
       this.editForm = { ...task }
@@ -203,7 +166,7 @@ const app = Vue.createApp({
           if (allTasks[i].id === json.id) {
             allTasks[i].content = json.content;
             allTasks[i].due_date = json.due_date;
-            allTasks[i].priority_id = json.priority_id;
+            allTasks[i].priority = json.priority;
             allTasks[i].list_id = json.list_id;
             allTasks[i].completed = json.completed;
           }

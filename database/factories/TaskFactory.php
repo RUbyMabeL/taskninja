@@ -47,7 +47,7 @@ class TaskFactory extends Factory
                 return $this->faker->randomElement($listIds);
             },
             'due_date' => $this->faker->date(),
-            'priority_id' => $this->faker->numberBetween(1, 3),
+            'priority' => $this->faker->word(),
             'completed' => $this->faker->boolean(false)
         ];
     }
