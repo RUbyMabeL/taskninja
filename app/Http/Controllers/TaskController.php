@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Task;
 use App\Models\User;
+use App\Models\Priority;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -33,7 +34,7 @@ class TaskController extends Controller
         $task->content = $request->input('content');
         $task->list_id = $request->input('list_id');
         $task->due_date = $request->input('due_date');
-        $task->priority = $request->input('priority');
+        $task->priority_id = $request->input('priority_id');
         $task->completed = false;
         $task->user_id = $user->id;
         $task->save();
@@ -47,7 +48,7 @@ class TaskController extends Controller
         $task->content = $request->input('content');
         $task->list_id = $request->input('list_id');
         $task->due_date = $request->input('due_date');
-        $task->priority = $request->input('priority');
+        $task->priority_id = $request->input('priority_id');
         $task->completed = $request->input('completed');
         $task->save();
 
