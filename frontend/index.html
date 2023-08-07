@@ -51,7 +51,7 @@
           </div>
           <div class="card-body">
             <p class="card-text">Task: {{ task.content }}</p>
-            <p class="card-text">Priority: {{ getPriorityName(task.priority_id) }}</p>
+            <p class="card-text">Priority: {{ task.priority }}</p>
             <p class="card-text">Due Date: {{ task.due_date }}</p>
             <p class="card-text">Completed: {{ task.completed }}</p>
           </div>
@@ -113,10 +113,14 @@
 
               <div class="form-group mb-3">
                 <label class="form-label" for="priority">Priority</label>
-                <select class="form-select" v-model="taskForm.priority_id" id="priority">
-                  <option v-for="priority in priorities" :value="priority.id">{{ priority.level }}</option>
-              </select>        
-            </div>
+                <select class="form-select" v-model="taskForm.priority" id="priority" required>
+                  <!-- <option selected>Choose a priority</option> -->
+                  <option value="high">High</option>
+                  <option value="medium">Medium</option>
+                  <option value="low">Low</option>
+                </select>
+              </div>
+
               <button type="submit" class="btn btn-primary">Add Task</button>
             </form>
           </div>
@@ -177,12 +181,13 @@
 
               <div class="form-group mb-3">
                 <label class="form-label" for="priority">Priority</label>
-                <select class="form-select" v-model="editForm.priority_id" id="priority">
-                  <option v-for="priority in priorities" :value="priority.id">{{ priority.level }}</option>
-              </select>        
-            </div>
-
-
+                <select class="form-select" v-model="editForm.priority" id="priority" required>
+                  <!-- <option selected>Choose a priority</option> -->
+                  <option value="high">High</option>
+                  <option value="medium">Medium</option>
+                  <option value="low">Low</option>
+                </select>
+              </div>
 
               <div class="form-group mb-3">
                 <label class="form-label" for="completed">Complete Status</label>

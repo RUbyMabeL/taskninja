@@ -17,8 +17,7 @@ return new class extends Migration
             $table->bigInteger('list_id')->unsigned();
             $table->string('content');
             $table->date('due_date');
-            $table->bigInteger('priority_id')->unsigned(); 
-            $table->foreign('priority_id')->references('id')->on('priorities'); 
+            $table->string('priority');
             $table->boolean('completed');
             $table->timestamps();
         });

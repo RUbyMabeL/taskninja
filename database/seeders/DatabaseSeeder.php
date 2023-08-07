@@ -22,16 +22,11 @@ class DatabaseSeeder extends Seeder
         \App\Models\User::factory(3)->create();
 
         $this->call([
-
-            PrioritySeeder::class
-        ]);
-        $this->call([
-            TaskSeeder::class,
-
             ListsSeeder::class
-
         ]);
-              
-
+        
+        $this->call([
+            TaskSeeder::class
+        ]);
     }
 }
