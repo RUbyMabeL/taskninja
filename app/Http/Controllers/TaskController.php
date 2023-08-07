@@ -62,4 +62,13 @@ class TaskController extends Controller
 
         return response()->json($task, 200);
     }
+
+    // get tasks by a list
+    public function getTasksByList($user_id, $list_id)
+    {
+        $tasks = Task::where('user_id', $user_id)
+            ->where('list_id', $list_id)
+            ->get();
+        return $tasks;
+    }
 }

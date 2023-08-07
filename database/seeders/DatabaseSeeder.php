@@ -19,20 +19,19 @@ class DatabaseSeeder extends Seeder
             'password' => Hash::make('password')
         ]);
 
-        \App\Models\User::factory(9)->create();
+        \App\Models\User::factory(3)->create();
 
         $this->call([
+
             PrioritySeeder::class
         ]);
         $this->call([
-            TaskSeeder::class
-        ]);
+            TaskSeeder::class,
 
-        $this->call([
             ListsSeeder::class
-        ]);
 
-       
+        ]);
+              
 
     }
 }
