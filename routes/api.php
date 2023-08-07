@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\TaskController;
 use App\Http\Controllers\ListsController;
 use Illuminate\Http\Request;
@@ -27,4 +28,6 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::apiResource('users.lists', ListsController::class);
 });
 
+Route::get('/tasks/{user}/{list}', [TaskController::class, 'getTasksByList']);
 Route::apiResource('priorities', PrioritiesController::class);
+

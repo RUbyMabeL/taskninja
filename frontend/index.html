@@ -23,10 +23,11 @@
     </div>
 
     <!-- Dispaly Lists -->
-    <div class="row ms-5 mb-3" v-if="token" >
+
+    <div class="row ms-5 mb-3" v-if="token">
       <div class="col-12">
-        <div class="btn-group me-3" role="group" aria-label="Lists" v-for="list in lists">     
-          <button type="button" class="btn btn-outline-primary">{{ list.name }}</button>
+        <div class="btn-group me-3" role="group" aria-label="Lists" v-for="list in lists">
+          <button type="button" class="btn btn-outline-primary" @click="filterList(list)">{{ list.name }}</button>
           <button type="button" class="btn btn-outline-primary" @click="editList(list)">✏</button>
         </div>
         <div class="col mt-3">
@@ -72,6 +73,12 @@
           </div>
 
           <button type="submit" class="btn btn-primary">Log in</button>
+
+          <hr />
+          <div class="form-group mb-3">
+            <p>No account? Click <a @click="showRegisterForm = true">here</a>
+              to register</p>
+          </div>
         </form>
       </div>
     </div>
@@ -138,6 +145,35 @@
             </div>
           </div>
         </div>
+
+    <!-- New User Modal and Form -->
+    <div class="modal" tabindex="-1" :class="{'d-block pt-5 show bg-dark bg-opacity-75': showRegisterForm}">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">New User</h5>
+            <button type="button" class="btn-close" aria-label="Close" @click="showRegisterForm = false"></button>
+          </div>
+          <div class="modal-body">
+            <form @submit.prevent="register">
+              <div class="form-group mb-3">
+                <label class="form-label" for="content">Name</label>
+                <input type="text" id="name" class="form-control" v-model="registerForm.name">
+              </div>
+              <div class="form-group mb-3">
+                <label class="form-label" for="content">Email</label>
+                <input type="text" id="email" class="form-control" v-model="registerForm.email">
+              </div>
+              <div class="form-group mb-3">
+                <label class="form-label" for="content">Password</label>
+                <input type="text" id="password" class="form-control" v-model="registerForm.password">
+              </div>
+              <button type="submit" class="btn btn-primary">Register</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
 
     <!-- Edit Task Modal and Form -->
     <div class="modal" tabindex="-1" :class="{'d-block pt-5 show bg-dark bg-opacity-75': showEditTask}">
@@ -208,11 +244,12 @@
               <div>
                 <div class="text-start">
                   <button type="submit" class="btn btn-outline-primary btn-sm me-3">Update List</button>
-                  <button type="button" class="btn btn-outline-danger btn-sm" @click="deleteList(editListForm.id)">Delete</button>
+                  <button type="button" class="btn btn-outline-danger btn-sm"
+                    @click="deleteList(editListForm.id)">Delete</button>
                 </div>
-            </div>
-          </form>
-        </div>
+              </div>
+            </form>
+          </div>
         </div>
       </div>
     </div>
