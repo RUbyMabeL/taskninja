@@ -5,6 +5,8 @@ use App\Http\Controllers\TaskController;
 use App\Http\Controllers\ListsController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\PrioritiesController;
+
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -27,5 +29,5 @@ Route::middleware(['auth:sanctum'])->group(function () {
 });
 
 Route::get('/tasks/{user}/{list}', [TaskController::class, 'getTasksByList']);
+Route::apiResource('priorities', PrioritiesController::class);
 
-// Route::post('/users', [RegisteredUserController::class, 'store']);

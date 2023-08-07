@@ -12,15 +12,12 @@ class ListsController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(User $user)
     {
-        $lists = Lists::all();
-        return  $lists;
-    }
-
-    public function show(Lists $list)
-    {
-        return response()->json($list, 200);
+        if (Auth::id() !== $user->id) {
+            return response()->json(['error' => 'Unauthorized'], 403);
+        }
+        return response()->json($user->lists);
     }
 
     public function store(User $user, Request $request)
