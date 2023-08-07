@@ -22,11 +22,17 @@ class DatabaseSeeder extends Seeder
         \App\Models\User::factory(9)->create();
 
         $this->call([
+            PrioritySeeder::class
+        ]);
+        $this->call([
             TaskSeeder::class
         ]);
 
         $this->call([
             ListsSeeder::class
         ]);
+
+       
+
     }
 }
