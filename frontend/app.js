@@ -77,6 +77,7 @@ const app = Vue.createApp({
         this.user = json.user
         sessionStorage.setItem('token', this.token)
         sessionStorage.setItem('user', JSON.stringify(json.user))
+        this.getLists()
         this.getTasks()
 
       } catch (error) {
@@ -147,9 +148,6 @@ const app = Vue.createApp({
   getPriorityName: function(priorityId) {
       return this.prioritiesMap[priorityId] || "Unknown";
   },
-
-
-  
     addTask: async function () {
       try {
         //url: baseUrl/api/users/id/notes
@@ -179,8 +177,6 @@ const app = Vue.createApp({
         console.log(error)
       }
     },
-
-
     editTask: async function (task) {
       this.showEditTask = true
       this.editForm = { ...task }
@@ -335,93 +331,6 @@ const app = Vue.createApp({
         console.log(error)
       }
     },
-
-    // Lists CRUD
-    getLists: async function () {
-      try {
-        if (this.user.id && this.token) {
-          const response = await fetch(`${baseUrl}/api/users/${this.user.id}/lists`, {
-            method: 'get',
-            headers: {
-              'Accept': 'application/json',
-              'Authorization': `Bearer ${this.token}`
-            }
-          })
-
-          this.lists = await response.json()
-        }
-      } catch (error) {
-        console.log(error)
-      }
-    },
-    addList: async function () {
-      try {
-        this.listForm.user_id = this.user.id;
-        const response = await fetch(`${baseUrl}/api/users/${this.user.id}/lists`, {
-          method: 'post',
-          headers: {
-            'Content-Type': 'application/json',
-            'Accept': 'application/json',
-            'Authorization': `Bearer ${this.token}`
-          },
-          body: JSON.stringify(this.listForm)
-        })
-
-        const json = await response.json()
-        this.lists.push(json)
-        this.showNewList = false
-
-      } catch (error) {
-        console.log(error)
-      }
-    },
-    editList: async function (list) {
-      this.showEditList = true
-      this.editListForm = { ...list }
-    },
-    updateList: async function () {
-      try {
-        this.editListForm.user_id = this.user.id
-        //url: baseUrl/api/users/id/notes
-        const response = await fetch(`${baseUrl}/api/users/${this.user.id}/lists/${this.editListForm.id}`, {
-          method: 'put',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${this.token}`
-          },
-          body: JSON.stringify(this.editListForm)
-        })
-
-        const json = await response.json()
-
-        var allLists = this.lists
-        for (let i = 0; i < allLists.length; i++) {
-          if (allLists[i].id === json.id) {
-            allLists[i].name = json.name;
-          }
-        }
-        this.showEditList = false
-
-      } catch (error) {
-        console.log(error)
-      }
-    },
-    deleteList: async function (list_id) {
-      try {
-        const response = await fetch(`${baseUrl}/api/users/${this.user.id}/lists/${list_id}`, {
-          method: 'delete',
-          headers: {
-            'Authorization': `Bearer ${this.token}`
-          },
-        })
-        this.lists.splice(this.lists.findIndex(a => a.id === list_id), 1)
-        this.showEditList = false;
-
-      } catch (error) {
-        console.log(error)
-      }
-    },
-
     //filter list
     filterList: async function (list) {
       this.editListForm.id = list.id
