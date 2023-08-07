@@ -4,63 +4,45 @@ namespace App\Http\Controllers;
 
 use App\Models\Lists;
 use Illuminate\Http\Request;
+use App\Models\User;
+use Illuminate\Support\Facades\Auth;
 
 class ListsController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(User $user)
     {
-        $lists = Lists::all();
-        return $lists;
+        if (Auth::id() !== $user->id) {
+            return response()->json(['error' => 'Unauthorized'], 403);
+        }
+        return response()->json($user->lists);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
+    public function store(User $user, Request $request)
     {
-        //
+        $list = new Lists();
+        $list->user_id = $request->input('user_id');
+        $list->name = $request->input('name');
+        $list->save();
+
+        return response()->json($list, 201);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
+    public function update(User $user, Lists $list, Request $request)
     {
-        //
+        $list->user_id = $request->input('user_id');
+        $list->name = $request->input('name');
+        $list->save();
+
+        return response()->json($list, 200);
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(Lists $lists)
+    public function destroy(User $user, Lists $list)
     {
-        //
-    }
+        $list->delete();
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Lists $lists)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, Lists $lists)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Lists $lists)
-    {
-        //
+        return response()->json($list, 200);
     }
 }
