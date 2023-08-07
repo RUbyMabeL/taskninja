@@ -1,0 +1,229 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Task Ninja</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+  <script src="https://unpkg.com/vue@3"></script>
+</head>
+
+<body>
+
+  <div id="app" class="container">
+    <div class="row p-5 d-flex justify-content-between align-items-center">
+      <div class="col">
+        <h1 class="display-4">{{ title }}</h1>
+      </div>
+      <div class="col text-end">
+        <button class="btn btn-outline-secondary me-3" @click="showNewTask = true" v-if="token">&plus;</button>
+        <button class="btn btn-outline-secondary" v-if="token" @click="logout">Logout</button>
+      </div>
+    </div>
+
+    <!-- Dispaly Lists -->
+    <div class="row ms-5 mb-3" v-if="token" >
+      <div class="col-12">
+        <div class="btn-group me-3" role="group" aria-label="Lists" v-for="list in lists">     
+          <button type="button" class="btn btn-outline-primary">{{ list.name }}</button>
+          <button type="button" class="btn btn-outline-primary" @click="editList(list)">✏</button>
+        </div>
+        <div class="col mt-3">
+          <button class="btn btn-primary me-3 btn-sm" @click="showNewList = true" v-if="token">New List 📜</button>
+        </div>
+      </div>
+
+    </div>
+    <!-- Display Tasks if user is logged in -->
+    <div class="row" v-if="token">
+      <div class="col-12 col-xl-6 p-3" v-for="task in tasks">
+        <div class="card">
+          <div class="card-header d-flex justify-content-between p-3">
+            <div class="d-flex align-items-center">
+              <button class="btn btn-outline-secondary me-3" @click="editTask(task)">Edit</button>
+              <button class=" btn btn-outline-danger" @click="deleteTask(task.id)">Delete</button>
+            </div>
+            <div class="d-flex align-items-center">
+              <button class="btn btn-outline-warning me-3">{{ getListName(task.list_id) }}</button>
+            </div>
+          </div>
+          <div class="card-body">
+            <p class="card-text">Task: {{ task.content }}</p>
+            <p class="card-text">Priority: {{ task.priority }}</p>
+            <p class="card-text">Due Date: {{ task.due_date }}</p>
+            <p class="card-text">Completed: {{ task.completed }}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Display login if user is not logged in -->
+    <div class="row" v-else>
+      <div class="col col-md-6 offset-md-3">
+        <form class="form bg-light border border-1 p-5" @submit.prevent="login">
+          <div class="form-group mb-3">
+            <label for="email" class="form-label">Email</label>
+            <input id="email" type="email" class="form-control" v-model="loginForm.email" required>
+          </div>
+          <div class="form-group mb-3">
+            <label for="password" class="form-label">Password</label>
+            <input id="password" type="password" class="form-control" v-model="loginForm.password" required>
+          </div>
+
+          <button type="submit" class="btn btn-primary">Log in</button>
+        </form>
+      </div>
+    </div>
+
+    <!-- New Task Modal and Form -->
+    <div class="modal" tabindex="-1" :class="{'d-block pt-5 show bg-dark bg-opacity-75': showNewTask}">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">New Task</h5>
+            <button type="button" class="btn-close" aria-label="Close" @click="showNewTask = false"></button>
+          </div>
+          <div class="modal-body">
+            <form @submit.prevent="addTask">
+
+              <div class="form-group mb-3">
+                <label class="form-label" for="content">Task Content</label>
+                <textarea id="content" class="form-control" v-model="taskForm.content" required></textarea>
+              </div>
+
+              <div class="form-group mb-3">
+                <label class="form-label" for="list_id">List</label>
+                <select class="form-select" v-model="taskForm.list_id" id="list_id" required>
+                  <option v-for="list in lists" :value="list.id" :key="list.id">{{list.name}}</option>
+                </select>
+              </div>
+
+              <div class="form-group mb-3">
+                <label class="form-label" for="due_date">Due Date</label>
+                <input type="date" id="due_date" class="form-control" v-model="taskForm.due_date" required>
+              </div>
+
+              <div class="form-group mb-3">
+                <label class="form-label" for="priority">Priority</label>
+                <select class="form-select" v-model="taskForm.priority" id="priority" required>
+                  <!-- <option selected>Choose a priority</option> -->
+                  <option value="high">High</option>
+                  <option value="medium">Medium</option>
+                  <option value="low">Low</option>
+                </select>
+              </div>
+
+              <button type="submit" class="btn btn-primary">Add Task</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- New List Modal and Form -->
+        <div class="modal" tabindex="-1" :class="{'d-block pt-5 show bg-dark bg-opacity-75': showNewList}">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title">New List</h5>
+                <button type="button" class="btn-close" aria-label="Close" @click="showNewList = false"></button>
+              </div>
+              <div class="modal-body">
+                <form @submit.prevent="addList">
+                  <div class="form-group mb-3">
+                    <label class="form-label" for="content">List Name</label>
+                    <input type="text" id="name" class="form-control" v-model="listForm.name" required>
+                  </div>
+                  <button type="submit" class="btn btn-primary">Add List</button>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+
+    <!-- Edit Task Modal and Form -->
+    <div class="modal" tabindex="-1" :class="{'d-block pt-5 show bg-dark bg-opacity-75': showEditTask}">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Edit Task</h5>
+            <button type="button" class="btn-close" aria-label="Close" @click="showEditTask = false"></button>
+          </div>
+          <div class="modal-body">
+            <form @submit.prevent="updateTask">
+
+              <input id="id" class="form-control" v-model="editForm.id" type="hidden">
+
+              <div class="form-group mb-3">
+                <label class="form-label" for="content">Task Content</label>
+                <textarea id="content" class="form-control" v-model="editForm.content" required></textarea>
+              </div>
+
+              <div class="form-group mb-3">
+                <label class="form-label" for="list_id">List</label>
+                <select class="form-select" v-model="editForm.list_id" id="list_id" required>
+                  <option v-for="list in lists" :value="list.id" :key="list.id">{{list.name}}</option>
+                </select>
+              </div>
+
+              <div class="form-group mb-3">
+                <label class="form-label" for="due_date">Due Date</label>
+                <input type="date" id="due_date" class="form-control" v-model="editForm.due_date" required>
+              </div>
+
+              <div class="form-group mb-3">
+                <label class="form-label" for="priority">Priority</label>
+                <select class="form-select" v-model="editForm.priority" id="priority" required>
+                  <!-- <option selected>Choose a priority</option> -->
+                  <option value="high">High</option>
+                  <option value="medium">Medium</option>
+                  <option value="low">Low</option>
+                </select>
+              </div>
+
+              <div class="form-group mb-3">
+                <label class="form-label" for="completed">Complete Status</label>
+                <input class="form-check-input" type="checkbox" value="" id="completed" v-model="editForm.completed"
+                  v-bind:checked="editForm.completed === 1 || editForm.completed === true">
+              </div>
+
+              <button type="submit" class="btn btn-primary">Update Task</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Edit List Modal and Form -->
+    <div class="modal" tabindex="-1" :class="{'d-block pt-5 show bg-dark bg-opacity-75': showEditList}">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Edit List</h5>
+            <button type="button" class="btn-close" aria-label="Close" @click="showEditList = false"></button>
+          </div>
+          <div class="modal-body">
+            <form @submit.prevent="updateList">
+              <input id="id" class="form-control" v-model="editListForm.id" type="hidden">
+              <div class="form-group mb-3">
+                <label class="form-label" for="name">List Name</label>
+                <input type="text" id="name" class="form-control" v-model="editListForm.name">
+              </div>
+              <div>
+                <div class="text-start">
+                  <button type="submit" class="btn btn-outline-primary btn-sm me-3">Update List</button>
+                  <button type="button" class="btn btn-outline-danger btn-sm" @click="deleteList(editListForm.id)">Delete</button>
+                </div>
+            </div>
+          </form>
+        </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+  <script src="app.js"></script>
+</body>
+
+</html>

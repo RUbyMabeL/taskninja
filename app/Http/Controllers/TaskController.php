@@ -21,84 +21,44 @@ class TaskController extends Controller
         return response()->json($user->tasks);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
+    public function show(User $user, Task $task)
     {
-        //
+        return response()->json($task, 200);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
+    //create new task
+    public function store(User $user, Request $request)
     {
-        //
+        $task = new Task();
+        $task->content = $request->input('content');
+        $task->list_id = $request->input('list_id');
+        $task->due_date = $request->input('due_date');
+        $task->priority = $request->input('priority');
+        $task->completed = false;
+        $task->user_id = $user->id;
+        $task->save();
+
+        return response()->json($task, 201);
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(Task $task)
+    //UPDATE
+    public function update(User $user, Task $task, Request $request)
     {
-        //
+        $task->content = $request->input('content');
+        $task->list_id = $request->input('list_id');
+        $task->due_date = $request->input('due_date');
+        $task->priority = $request->input('priority');
+        $task->completed = $request->input('completed');
+        $task->save();
+
+        return response()->json($task, 200);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Task $task)
+    //delete
+    public function destroy(User $user, Task $task)
     {
-        //
+        $task->delete();
+
+        return response()->json($task, 200);
     }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, Task $task)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Task $task)
-    {
-        //
-    }
-
-
-    // public function show(Task $task)
-    // {
-    //     return response()->json($task, 200);
-    // }
-
-    // //create new task
-    // public function store(Request $request)
-    // {
-    //     $task = new Task();
-    //     $task->content = $request->input('content');
-    //     $task->save();
-
-    //     return response()->json($task, 201);
-    // }
-
-    // //UPDATE
-    // public function update(Task $task, Request $request)
-    // {
-    //     $task->content = $request->input('content');
-    //     $task->save();
-
-    //     return response()->json($task, 200);
-    // }
-
-    // //delete
-    // public function destroy(Task $task)
-    // {
-    //     $task->delete();
-
-    //     return response()->json($task, 200);
-    // }
 }
