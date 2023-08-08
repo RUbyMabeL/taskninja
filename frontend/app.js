@@ -15,6 +15,7 @@ const app = Vue.createApp({
       showNewList: false,
       showEditList: false,
       showRegisterForm: false,
+      RegisterSuccess: false,
       registerForm: {
         name: '',
         email: '',
@@ -80,6 +81,8 @@ const app = Vue.createApp({
         sessionStorage.setItem('user', JSON.stringify(json.user))
         this.getLists()
         this.getTasks()
+        this.RegisterSuccess = false
+
         //clear the login form
         this.loginForm.email = ''
         this.loginForm.password = ''
@@ -101,6 +104,8 @@ const app = Vue.createApp({
         })
         console.log(await response.json())
         this.showRegisterForm = false
+        this.RegisterSuccess = true
+
         // clear the Registerform
         this.registerForm.name = ''
         this.registerForm.email = ''
@@ -108,6 +113,15 @@ const app = Vue.createApp({
 
       } catch (error) {
         console.log(error)
+      }
+    },
+    togglePassword: function () {
+      let x = document.getElementById("regi-password");
+      if (x.type === "password") {
+        x.type = "text";
+      }
+      else {
+        x.type = "password";
       }
     },
     // Tasks CRUD
@@ -168,7 +182,6 @@ const app = Vue.createApp({
           },
           body: JSON.stringify(this.taskForm)
         })
-        console.log('Submitting task:', this.taskForm);
 
 
         const json = await response.json()
