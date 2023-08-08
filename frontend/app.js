@@ -55,6 +55,7 @@ const app = Vue.createApp({
   },
   created: async function () {
     this.token = sessionStorage.getItem('token') || ''
+    //has an loading error
     this.user = JSON.parse(sessionStorage.getItem('user') || {})
     await this.fetchPriorities();
     this.getLists()
@@ -79,6 +80,9 @@ const app = Vue.createApp({
         sessionStorage.setItem('user', JSON.stringify(json.user))
         this.getLists()
         this.getTasks()
+        //clear the login form
+        this.loginForm.email = ''
+        this.loginForm.password = ''
 
       } catch (error) {
         console.log(error)
@@ -97,6 +101,10 @@ const app = Vue.createApp({
         })
         console.log(await response.json())
         this.showRegisterForm = false
+        // clear the Registerform
+        this.registerForm.name = ''
+        this.registerForm.email = ''
+        this.registerForm.password = ''
 
       } catch (error) {
         console.log(error)
@@ -121,33 +129,33 @@ const app = Vue.createApp({
         console.log(error)
       }
     },
-    fetchPriorities: async function() {
+    fetchPriorities: async function () {
       try {
-          const response = await fetch(`${baseUrl}/api/priorities`, {
-              method: 'get',
-              headers: {
-                  'Accept': 'application/json'
-              }
-          });
-  
-          const prioritiesData = await response.json();
-  
-         
-          this.priorities = prioritiesData;
-  
-          this.prioritiesMap = {};
-          prioritiesData.forEach(priority => {
-              this.prioritiesMap[priority.id] = priority.level;
-          });
-          console.log("Mapped priorities:", this.prioritiesMap); 
-  
+        const response = await fetch(`${baseUrl}/api/priorities`, {
+          method: 'get',
+          headers: {
+            'Accept': 'application/json'
+          }
+        });
+
+        const prioritiesData = await response.json();
+
+
+        this.priorities = prioritiesData;
+
+        this.prioritiesMap = {};
+        prioritiesData.forEach(priority => {
+          this.prioritiesMap[priority.id] = priority.level;
+        });
+        console.log("Mapped priorities:", this.prioritiesMap);
+
       } catch (error) {
-          console.log('Error fetching priorities:', error);
+        console.log('Error fetching priorities:', error);
       }
-  },
-  getPriorityName: function(priorityId) {
+    },
+    getPriorityName: function (priorityId) {
       return this.prioritiesMap[priorityId] || "Unknown";
-  },
+    },
     addTask: async function () {
       try {
         //url: baseUrl/api/users/id/notes
@@ -170,7 +178,7 @@ const app = Vue.createApp({
         this.taskForm.due_date = ''
         this.taskForm.priority = ''
         this.taskForm.list_id = ''
-                
+
         this.showNewTask = false
 
       } catch (error) {
@@ -308,17 +316,17 @@ const app = Vue.createApp({
             'Authorization': `Bearer ${this.token}`
           },
         })
-        
+
         // get ids of all the tasks that belongs to the list
         let deleteTasksIds = [];
-        for(let task of this.tasks){
-          if(task.list_id === list_id){
+        for (let task of this.tasks) {
+          if (task.list_id === list_id) {
             deleteTasksIds.push(task.id);
           }
         }
         console.log(deleteTasksIds);
         // delete all the tasks of current list
-        for(let taskId of deleteTasksIds){
+        for (let taskId of deleteTasksIds) {
           this.deleteTask(taskId);
         }
 
@@ -353,6 +361,7 @@ const app = Vue.createApp({
       this.token = ''
       this.user = {}
     },
+
     getListName(listId) {
       const list = this.lists.find(list => list.id === listId);
       return list ? list.name : 'List Not Found';
