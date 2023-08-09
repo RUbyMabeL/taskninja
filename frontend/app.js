@@ -10,8 +10,6 @@ const app = Vue.createApp({
       tasks: [],
       prioritiesMap: {},
       lists: [],
-      selectedPriority: -1,
-      selectedCompleteStatus: -1,
       showNewTask: false,
       showEditTask: false,
       showNewList: false,
@@ -31,7 +29,7 @@ const app = Vue.createApp({
         content: '',
         list_id: '',
         due_date: '',
-        priority_id: '-1'
+        priority_id: ''
       },
       listForm: {
         user_id: '',
@@ -139,8 +137,7 @@ const app = Vue.createApp({
             }
           })
 
-          this.tasks = await response.json();
-          this.filterTasks();
+          this.tasks = await response.json()
         }
       } catch (error) {
         console.log(error)
@@ -248,6 +245,7 @@ const app = Vue.createApp({
         console.log(error)
       }
     },
+
     // Lists CRUD
     getLists: async function () {
       try {
@@ -371,30 +369,16 @@ const app = Vue.createApp({
         console.log(error)
       }
     },
+
     logout: async function () {
       this.token = ''
       this.user = {}
     },
+
     getListName(listId) {
       const list = this.lists.find(list => list.id === listId);
       return list ? list.name : 'List Not Found';
-    },
-    filterTasks() {
-      this.getTasks();
-      this.tasks.sort((a, b) => Date.parse(new Date(b.due_date)) - Date.parse(new Date(a.due_date)));
-
-      const completeStatus = parseInt(this.selectedCompleteStatus);
-      const priorityFilter = parseInt(this.selectedPriority);
-
-      if (completeStatus !== -1) {
-        this.tasks = this.tasks.filter(t => t.completed === completeStatus);
-      }
-
-      if (priorityFilter !== -1) {
-        this.tasks = this.tasks.filter(t => t.priority_id === priorityFilter);
-      }
-    },
-
+    }
   }
 })
 
