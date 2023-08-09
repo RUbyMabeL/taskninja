@@ -402,12 +402,6 @@ const app = Vue.createApp({
         this.tasks = this.tasks.filter(t => t.priority_id === priorityFilter);
       }
     },
-    resetFilters() {
-      this.getTasks(); // Reset tasks to original data
-      this.selectedPriority = -1; // Reset selected priority
-      this.selectedCompleteStatus = -1; // Reset selected complete status
-      this.selectedDateOrder = -1; // Reset selected date order
-    }
 
   }
 })
