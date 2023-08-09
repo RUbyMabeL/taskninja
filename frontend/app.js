@@ -74,6 +74,12 @@ const app = Vue.createApp({
           body: JSON.stringify(this.loginForm)
         })
 
+        // if the password is wrong dispaly an alert
+        if (response.status === 422) {
+          alert("Wrong password or email")
+          return
+        }
+
         const json = await response.json()
         this.token = json.token
         this.user = json.user
@@ -93,6 +99,12 @@ const app = Vue.createApp({
     },
     //Register new user
     register: async function () {
+      // the password must be at least 8 characters long
+      if (this.registerForm.password.length < 8) {
+        alert("The password must be at least 8 characters long")
+        return
+      }
+
       try {
         const response = await fetch(`${baseUrl}/register`, {
           method: 'post',
@@ -102,10 +114,9 @@ const app = Vue.createApp({
           },
           body: JSON.stringify(this.registerForm)
         })
-        console.log(await response.json())
+        
         this.showRegisterForm = false
         this.RegisterSuccess = true
-
         // clear the Registerform
         this.registerForm.name = ''
         this.registerForm.email = ''
