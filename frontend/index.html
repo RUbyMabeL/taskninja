@@ -43,7 +43,7 @@
               <li class="nav-item active">
                 <a class="nav-link" href="#">
                   <select class="form-select" v-model="selectedDateOrder">
-                    <option value="-1" selected>filter by due date</option>
+                    <option value="-1" disabled selected>filter by due date</option>
                     <option value="0">Descending</option>
                     <option value="1">Aescending</option>
                   </select>
@@ -52,7 +52,7 @@
               <li class="nav-item active">
                 <a class="nav-link" href="#">
                   <select class="form-select" v-model="selectedPriority">
-                    <option value="-1" selected>filter by priority</option>
+                    <option value="-1" disabled selected>filter by priority</option>
                     <option v-for="priority in priorities" :value="priority.id">{{ priority.level }}</option>
                   </select>
                 </a>
@@ -60,7 +60,7 @@
               <li class="nav-item">
                 <a class="nav-link" href="#">
                   <select class="form-select" v-model="selectedCompleteStatus">
-                    <option value="-1" selected>filter by complete status</option>
+                    <option value="-1" disabled selected>filter by complete status</option>
                     <option value="0">Uncompleted</option>
                     <option value="1">Completed</option>
                   </select>
@@ -69,6 +69,12 @@
               <li class="nav-item">
                 <a class="nav-link" href="#">
                   <button type="submit" id='submitFilter' class="btn btn-primary" hidden="hidden">Apply filter</button>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="#">
+                  <button type="button" id='clearFilter' class="btn btn-danger" @click="resetFilters">Clear
+                    filter</button>
                 </a>
               </li>
             </ul>
