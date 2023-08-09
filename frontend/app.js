@@ -8,7 +8,6 @@ const app = Vue.createApp({
       priorities: [],
       user: {},
       tasks: [],
-      prioritiesMap: {},
       lists: [],
       showNewTask: false,
       showEditTask: false,
@@ -58,9 +57,10 @@ const app = Vue.createApp({
     this.token = sessionStorage.getItem('token') || ''
     //has an loading error
     this.user = JSON.parse(sessionStorage.getItem('user') || {})
-    await this.fetchPriorities();
+    
     this.getLists()
     this.getTasks()
+    this.getPriorities()
   },
   methods: {
     login: async function () {
@@ -128,7 +128,6 @@ const app = Vue.createApp({
     getTasks: async function () {
       try {
         if (this.user.id && this.token) {
-          //baseUrl/api/users/{id}/notes
           const response = await fetch(`${baseUrl}/api/users/${this.user.id}/tasks`, {
             method: 'get',
             headers: {
@@ -143,7 +142,7 @@ const app = Vue.createApp({
         console.log(error)
       }
     },
-    fetchPriorities: async function () {
+    getPriorities: async function () {
       try {
         const response = await fetch(`${baseUrl}/api/priorities`, {
           method: 'get',
@@ -152,23 +151,12 @@ const app = Vue.createApp({
           }
         });
 
-        const prioritiesData = await response.json();
-
-
-        this.priorities = prioritiesData;
-
-        this.prioritiesMap = {};
-        prioritiesData.forEach(priority => {
-          this.prioritiesMap[priority.id] = priority.level;
-        });
-        console.log("Mapped priorities:", this.prioritiesMap);
+        this.priorities = await response.json();
+        console.log(this.priorities);
 
       } catch (error) {
         console.log('Error fetching priorities:', error);
       }
-    },
-    getPriorityName: function (priorityId) {
-      return this.prioritiesMap[priorityId] || "Unknown";
     },
     addTask: async function () {
       try {
@@ -375,10 +363,15 @@ const app = Vue.createApp({
       this.user = {}
     },
 
-    getListName(listId) {
+    getListName: function(listId) {
       const list = this.lists.find(list => list.id === listId);
       return list ? list.name : 'List Not Found';
-    }
+    },
+
+    getPriorityName: function (priorityId) {
+      const priority = this.priorities.find(p => p.id === priorityId);
+      return priority ? priority.level : 'Priority Not Found';
+    },
   }
 })
 
