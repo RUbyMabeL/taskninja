@@ -12,7 +12,6 @@ const app = Vue.createApp({
       lists: [],
       selectedPriority: -1,
       selectedCompleteStatus: -1,
-      selectedDateOrder: -1,
       showNewTask: false,
       showEditTask: false,
       showNewList: false,
@@ -85,7 +84,6 @@ const app = Vue.createApp({
         this.getLists()
         this.getTasks()
         this.RegisterSuccess = false
-        this.ShowFilterNav = true
 
         //clear the login form
         this.loginForm.email = ''
@@ -383,16 +381,10 @@ const app = Vue.createApp({
     },
     filterTasks() {
       this.getTasks();
+      this.tasks.sort((a, b) => Date.parse(new Date(b.due_date)) - Date.parse(new Date(a.due_date)));
 
       const completeStatus = parseInt(this.selectedCompleteStatus);
       const priorityFilter = parseInt(this.selectedPriority);
-      const dateFilter = parseInt(this.selectedDateOrder);
-
-      if (dateFilter === 0) {
-        this.tasks.sort((a, b) => Date.parse(new Date(b.due_date)) - Date.parse(new Date(a.due_date)));
-      } else if (dateFilter === 1) {
-        this.tasks.sort((a, b) => Date.parse(new Date(a.due_date)) - Date.parse(new Date(b.due_date)));
-      }
 
       if (completeStatus !== -1) {
         this.tasks = this.tasks.filter(t => t.completed === completeStatus);

@@ -30,7 +30,7 @@
     </div>
 
     <!--filter and sort tasks-->
-    <nav class="navbar navbar-expand-sm navbar-light bg-light" v-if="token">
+    <nav class="navbar navbar-expand-sm navbar-light bg-light">
       <div class="container-fluid ">
         <a class="navbar-brand" href="#"></a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
@@ -40,15 +40,6 @@
         <div class="collapse navbar-collapse justify-content-end" id="navbarSupportedContent">
           <form @submit.prevent="filterTasks">
             <ul class="navbar-nav">
-              <li class="nav-item active">
-                <a class="nav-link" href="#">
-                  <select class="form-select" v-model="selectedDateOrder">
-                    <option value="-1" selected>filter by due date</option>
-                    <option value="0">Descending</option>
-                    <option value="1">Aescending</option>
-                  </select>
-                </a>
-              </li>
               <li class="nav-item active">
                 <a class="nav-link" href="#">
                   <select class="form-select" v-model="selectedPriority">
@@ -68,7 +59,7 @@
               </li>
               <li class="nav-item">
                 <a class="nav-link" href="#">
-                  <button type="submit" id='submitFilter' class="btn btn-primary" hidden="hidden">Apply filter</button>
+                  <button type="submit" id='submitFilter' class="btn btn-primary">Apply filter</button>
                 </a>
               </li>
             </ul>
