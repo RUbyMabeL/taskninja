@@ -62,7 +62,7 @@ const app = Vue.createApp({
     this.user = JSON.parse(sessionStorage.getItem('user') || {})
     this.getLists()
     this.getTasks()
-    // this.getPriorities()
+    this.getPriorities()
   },
   methods: {
     login: async function () {
