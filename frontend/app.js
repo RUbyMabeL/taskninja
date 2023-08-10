@@ -8,7 +8,11 @@ const app = Vue.createApp({
       priorities: [],
       user: {},
       tasks: [],
+      originalTasks: [],
       lists: [],
+      selectedPriority: -1,
+      selectedCompleteStatus: -1,
+      selectedDateOrder: -1,
       showNewTask: false,
       showEditTask: false,
       showNewList: false,
@@ -55,7 +59,7 @@ const app = Vue.createApp({
   created: async function () {
     this.token = sessionStorage.getItem('token') || ''
     //has an loading error
-    this.user = JSON.parse(sessionStorage.getItem('user') || {})
+    // this.user = JSON.parse(sessionStorage.getItem('user') || {})
     
     this.getLists()
     this.getTasks()
@@ -83,9 +87,10 @@ const app = Vue.createApp({
         this.token = json.token
         this.user = json.user
         sessionStorage.setItem('token', this.token)
-        sessionStorage.setItem('user', JSON.stringify(json.user))
+        // sessionStorage.setItem('user', JSON.stringify(json.user))
         this.getLists()
         this.getTasks()
+        this.getPriorities()
         this.RegisterSuccess = false
 
         //clear the login form
@@ -147,6 +152,8 @@ const app = Vue.createApp({
           })
 
           this.tasks = await response.json()
+          this.originalTasks = this.tasks
+          this.filterTasks()
         }
       } catch (error) {
         console.log(error)
@@ -162,7 +169,6 @@ const app = Vue.createApp({
         });
 
         this.priorities = await response.json();
-        console.log(this.priorities);
 
       } catch (error) {
         console.log('Error fetching priorities:', error);
@@ -388,6 +394,36 @@ const app = Vue.createApp({
     getListColor(listId) {
       const list = this.lists.find(list => list.id === listId);
       return list ? list.color : '#808080'; 
+    },
+    filterTasks(){
+      // reset taks to original data
+      this.tasks = this.originalTasks;
+
+      const completeStatus = parseInt(this.selectedCompleteStatus);
+      const priorityFilter = parseInt(this.selectedPriority);
+      const dateFilter = parseInt(this.selectedDateOrder);
+
+      if (dateFilter === 0) {
+        this.tasks.sort((a, b) => Date.parse(new Date(b.due_date)) - Date.parse(new Date(a.due_date)));
+      } else if (dateFilter === 1) {
+        this.tasks.sort((a, b) => Date.parse(new Date(a.due_date)) - Date.parse(new Date(b.due_date)));
+      }
+
+      if (completeStatus !== -1) {
+        this.tasks = this.tasks.filter(t => t.completed === completeStatus);
+      }
+
+      if (priorityFilter !== -1) {
+        this.tasks = this.tasks.filter(t => t.priority_id === priorityFilter);
+      }
+    },
+    resetFilters() {
+      // Reset tasks to original data
+      this.tasks = this.originalTasks;
+
+      this.selectedPriority = -1; // Reset selected priority
+      this.selectedCompleteStatus = -1; // Reset selected complete status
+      this.selectedDateOrder = -1; // Reset selected date order
     }
   }
 })
