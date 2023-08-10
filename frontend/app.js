@@ -60,7 +60,8 @@ const app = Vue.createApp({
     this.token = sessionStorage.getItem('token') || ''
     //has an loading error
     this.user = JSON.parse(sessionStorage.getItem('user') || {})
-
+    this.getLists()
+    this.getTasks()
     // this.getPriorities()
   },
   methods: {
@@ -88,7 +89,6 @@ const app = Vue.createApp({
         sessionStorage.setItem('user', JSON.stringify(json.user))
         this.getLists()
         this.getTasks()
-        // this.getPriorities()
         this.RegisterSuccess = false
 
         //clear the login form
