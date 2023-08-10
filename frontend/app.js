@@ -32,12 +32,10 @@ const app = Vue.createApp({
       },
       listForm: {
         user_id: '',
-        name: ''
+        name: '',
+        color:'',
       },
-      listForm: {
-        user_id: '',
-        name: ''
-      },
+      
       editForm: {
         id: '',
         content: '',
@@ -49,7 +47,8 @@ const app = Vue.createApp({
       editListForm: {
         id: '',
         name: '',
-        user_id: ''
+        user_id: '',
+        color:'',
       }
     }
   },
@@ -296,6 +295,7 @@ const app = Vue.createApp({
       try {
         this.editListForm.user_id = this.user.id
         //url: baseUrl/api/users/id/notes
+
         const response = await fetch(`${baseUrl}/api/users/${this.user.id}/lists/${this.editListForm.id}`, {
           method: 'put',
           headers: {
@@ -306,11 +306,13 @@ const app = Vue.createApp({
         })
 
         const json = await response.json()
+        console.log(json)
         // update the specific list
         var allLists = this.lists
         for (let i = 0; i < allLists.length; i++) {
           if (allLists[i].id === json.id) {
             allLists[i].name = json.name;
+            allLists[i].color = json.color;
           }
         }
 
@@ -383,6 +385,10 @@ const app = Vue.createApp({
       const priority = this.priorities.find(p => p.id === priorityId);
       return priority ? priority.level : 'Priority Not Found';
     },
+    getListColor(listId) {
+      const list = this.lists.find(list => list.id === listId);
+      return list ? list.color : '#808080'; 
+    }
   }
 })
 

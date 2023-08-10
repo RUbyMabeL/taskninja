@@ -25,6 +25,7 @@ class ListsController extends Controller
         $list = new Lists();
         $list->user_id = $request->input('user_id');
         $list->name = $request->input('name');
+        $list->color = $request->input('color');
         $list->save();
 
         return response()->json($list, 201);
@@ -34,6 +35,7 @@ class ListsController extends Controller
     {
         $list->user_id = $request->input('user_id');
         $list->name = $request->input('name');
+        $list->color = $request->input('color'); 
         $list->save();
 
         return response()->json($list, 200);

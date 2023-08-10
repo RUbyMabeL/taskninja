@@ -23,6 +23,7 @@ class ListsFactory extends Factory
         return [
             'user_id' => $this->faker->randomElement($existingUserIds),
             'name' => $this->faker->unique()->word,
+            'color' => '#808080',
         ];
     }
 }
