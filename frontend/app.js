@@ -90,6 +90,7 @@ const app = Vue.createApp({
         this.getLists()
         this.getTasks()
         this.RegisterSuccess = false
+        this.getPriorities()
 
         //clear the login form
         this.loginForm.email = ''
