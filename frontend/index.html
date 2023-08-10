@@ -7,13 +7,20 @@
   <title>Task Ninja</title>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
   <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"
-  integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p"
-  crossorigin="anonymous"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.min.js"
-  integrity="sha384-Atwg2Pkwv9vp0ygtn1JAojH0nYbwNJLPhwyoVbhoPwBhjQPR5VtM2+xf0Uwh9KtT"
-  crossorigin="anonymous"></script>
+    integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p"
+    crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.min.js"
+    integrity="sha384-Atwg2Pkwv9vp0ygtn1JAojH0nYbwNJLPhwyoVbhoPwBhjQPR5VtM2+xf0Uwh9KtT"
+    crossorigin="anonymous"></script>
   <script src="https://unpkg.com/vue@3"></script>
-  
+  <style>
+    #logo {
+      max-width: 35%;
+      height: auto;
+      opacity: 0.7;
+    }
+  </style>
+
 </head>
 
 <body>
@@ -21,17 +28,17 @@
   <div id="app" class="container">
     <div class="row p-5 d-flex justify-content-between align-items-center">
       <div class="col">
-        <h1 class="display-4">{{ title }}</h1>
+        <h1 class="display-4"><img src="images/logo.png" class="img-fluid" id="logo"></h1>
       </div>
       <div class="col text-end">
         <button class="btn btn-outline-primary me-3" @click="showNewTask = true" v-if="token">Add Task 🆕</button>
         <button class="btn btn-outline-danger" v-if="token" @click="logout">Logout</button>
-      </div>   
+      </div>
     </div>
 
-  
+
     <!-- filter and sort tasks -->
-    <nav class="navbar navbar-expand-sm navbar-light bg-light" v-if="token">
+    <nav class="navbar navbar-expand-sm navbar-light bg-white" v-if="token">
       <div class="container-fluid ">
         <a class="navbar-brand" href="#"></a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
@@ -45,8 +52,8 @@
                 <a class="nav-link" href="#">
                   <select class="form-select" v-model="selectedDateOrder">
                     <option value="-1" disabled selected>filter by due date</option>
-                    <option value="0">Descending</option>
-                    <option value="1">Aescending</option>
+                    <option value="0">latest to oldest</option>
+                    <option value="1">oldest to latest</option>
                   </select>
                 </a>
               </li>
@@ -69,7 +76,7 @@
               </li>
               <li class="nav-item">
                 <a class="nav-link" href="#">
-                  <button type="submit" id='submitFilter' class="btn btn-outline-primary" >Apply filter</button>
+                  <button type="submit" id='submitFilter' class="btn btn-outline-primary">Apply filter</button>
                 </a>
               </li>
               <li class="nav-item">
@@ -88,12 +95,14 @@
 
     <div class="row ms-5 mb-3" v-if="token">
       <div class="col-12">
-        <div class="btn-group" role="group" aria-label="Lists" >
+        <div class="btn-group" role="group" aria-label="Lists">
           <button type="button" class="btn btn-outline-primary me-3" @click="getTasks()">All</button>
           <div v-for="list in lists" class="me-3">
-          <button type="button" class="btn btn-outline-primary" :style="{ backgroundColor: list.color, color: 'white', border: 'none'}"
-          @click="filterList(list)">{{ list.name }}</button>
-          <button type="button" class="btn btn-outline-primary" :style="{ borderColor: list.color }" @click="editList(list)">✏</button>
+            <button type="button" class="btn btn-outline-primary"
+              :style="{ backgroundColor: list.color, color: 'white', border: 'none'}" @click="filterList(list)">{{
+              list.name }}</button>
+            <button type="button" class="btn btn-outline-primary" :style="{ borderColor: list.color }"
+              @click="editList(list)">✏</button>
           </div>
         </div>
         <div class="col mt-3">
@@ -101,13 +110,14 @@
         </div>
       </div>
     </div>
-  
+
 
     <!-- Display Tasks if user is logged in -->
     <div class="row" v-if="token">
       <div class="col-12 col-xl-4 p-3" v-for="task in tasks">
         <div class="card">
-          <div class="card-header d-flex justify-content-between p-3" :style="{ backgroundColor: 'white', color: 'black' }">
+          <div class="card-header d-flex justify-content-between p-3"
+            :style="{ backgroundColor: 'white', color: 'black' }">
             <div class="d-flex align-items-center">
               <button class="btn btn-outline-secondary me-3" @click="editTask(task)">Edit</button>
               <button class=" btn btn-outline-danger" @click="deleteTask(task.id)">Delete</button>
@@ -116,9 +126,11 @@
               <button class="btn btn-outline-warning me-3">{{ getListName(task.list_id) }}</button>
             </div> -->
             <div class="d-flex align-items-center">
-              <button class="btn btn-outline-warning me-3" :style="{ backgroundColor: getListColor(task.list_id), color: 'white', border: 'none'}">{{ getListName(task.list_id) }}</button>
+              <button class="btn btn-outline-warning me-3"
+                :style="{ backgroundColor: getListColor(task.list_id), color: 'white', border: 'none'}">{{
+                getListName(task.list_id) }}</button>
             </div>
-            
+
           </div>
           <div class="card-body" :style="{ backgroundColor: getListColor(task.list_id),color: 'white' }">
             <p class="card-text">Task: {{ task.content }}</p>
@@ -128,70 +140,72 @@
               Completed: <input type="checkbox" :checked="task.completed === 1" disabled>
             </p>
           </div>
-          
+
         </div>
       </div>
     </div>
 
-    
+
     <!-- Display login if user is not logged in -->
     <div class="row" v-else>
       <div class="col col-md-6 offset-md-3">
-            <!-- display a register success message if RegisterSuccess is true -->
-          <div class="row" v-if="RegisterSuccess">
-              <p class="alert alert-success" role="alert">You have successfully registered! Try to log in now!</p>
+        <!-- display a register success message if RegisterSuccess is true -->
+        <div class="row" v-if="RegisterSuccess">
+          <p class="alert alert-success" role="alert">You have successfully registered! Try to log in now!</p>
+        </div>
+        <form class="form bg-light border border-1 p-5" @submit.prevent="login">
+          <div class="form-group mb-3">
+            <label for="email" class="form-label">Email</label>
+            <input id="email" type="email" class="form-control" v-model="loginForm.email" required>
           </div>
-          <form class="form bg-light border border-1 p-5" @submit.prevent="login">
-            <div class="form-group mb-3">
-              <label for="email" class="form-label">Email</label>
-              <input id="email" type="email" class="form-control" v-model="loginForm.email" required>
-            </div>
-            <div class="form-group mb-3">
-              <label for="password" class="form-label">Password</label>
-              <input id="password" type="password" class="form-control" v-model="loginForm.password" required>
-            </div>
+          <div class="form-group mb-3">
+            <label for="password" class="form-label">Password</label>
+            <input id="password" type="password" class="form-control" v-model="loginForm.password" required>
+          </div>
 
-            <button type="submit" class="btn btn-primary">Log in</button>
+          <button type="submit" class="btn btn-primary">Log in</button>
 
-            <hr />
-            <div class="form-group mb-3">
-              <p>No account? Click <button class="btn btn-outline-primary btn-sm" @click="showRegisterForm = true">here</button>
-                to register</p>
-            </div>
-          </form>
+          <hr />
+          <div class="form-group mb-3">
+            <p>No account? Click <button class="btn btn-outline-primary btn-sm"
+                @click="showRegisterForm = true">here</button>
+              to register</p>
+          </div>
+        </form>
       </div>
     </div>
 
-        <!-- New User Modal and Form -->
-        <div class="modal" tabindex="-1" :class="{'d-block pt-5 show bg-dark bg-opacity-75': showRegisterForm}">
-          <div class="modal-dialog">
-            <div class="modal-content">
-              <div class="modal-header">
-                <h5 class="modal-title">New User</h5>
-                <button type="button" class="btn-close" aria-label="Close" @click="showRegisterForm = false"></button>
+    <!-- New User Modal and Form -->
+    <div class="modal" tabindex="-1" :class="{'d-block pt-5 show bg-dark bg-opacity-75': showRegisterForm}">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">New User</h5>
+            <button type="button" class="btn-close" aria-label="Close" @click="showRegisterForm = false"></button>
+          </div>
+          <div class="modal-body">
+            <form @submit.prevent="register">
+              <div class="form-group mb-3">
+                <label class="form-label" for="content">Name</label>
+                <input type="text" id="name" class="form-control" v-model="registerForm.name">
               </div>
-              <div class="modal-body">
-                <form @submit.prevent="register">
-                  <div class="form-group mb-3">
-                    <label class="form-label" for="content">Name</label>
-                    <input type="text" id="name" class="form-control" v-model="registerForm.name">
-                  </div>
-                  <div class="form-group mb-3">
-                    <label class="form-label" for="content">Email</label>
-                    <input type="text" id="email" class="form-control" v-model="registerForm.email">
-                  </div>
-                  <div class="form-group mb-3">
-                    <label class="form-label" for="content">Password</label>
-                    <input type="password" id="regi-password" class="form-control mb-3" placeholder="Must be at least 8 characters" v-model="registerForm.password">
-                    <input type="checkbox" class="form-check-input" @click="togglePassword()">
-                    <label class="form-check-label ms-2">Show Password</label>
-                  </div>
-                  <button type="submit" class="btn btn-primary">Register</button>
-                </form>
+              <div class="form-group mb-3">
+                <label class="form-label" for="content">Email</label>
+                <input type="text" id="email" class="form-control" v-model="registerForm.email">
               </div>
-            </div>
+              <div class="form-group mb-3">
+                <label class="form-label" for="content">Password</label>
+                <input type="password" id="regi-password" class="form-control mb-3"
+                  placeholder="Must be at least 8 characters" v-model="registerForm.password">
+                <input type="checkbox" class="form-check-input" @click="togglePassword()">
+                <label class="form-check-label ms-2">Show Password</label>
+              </div>
+              <button type="submit" class="btn btn-primary">Register</button>
+            </form>
           </div>
         </div>
+      </div>
+    </div>
 
     <!-- New Task Modal and Form -->
     <div class="modal" tabindex="-1" :class="{'d-block pt-5 show bg-dark bg-opacity-75': showNewTask}">
@@ -226,8 +240,8 @@
 
                 <select class="form-select" v-model="taskForm.priority_id" id="newPriority" required>
                   <option v-for="priority in priorities" :value="priority.id">{{ priority.level }}</option>
-                </select>        
-            </div>
+                </select>
+              </div>
               <button type="submit" class="btn btn-primary">Add Task</button>
             </form>
           </div>
@@ -236,29 +250,29 @@
     </div>
 
     <!-- New List Modal and Form -->
-        <div class="modal" tabindex="-1" :class="{'d-block pt-5 show bg-dark bg-opacity-75': showNewList}">
-          <div class="modal-dialog">
-            <div class="modal-content">
-              <div class="modal-header">
-                <h5 class="modal-title">New List</h5>
-                <button type="button" class="btn-close" aria-label="Close" @click="showNewList = false"></button>
+    <div class="modal" tabindex="-1" :class="{'d-block pt-5 show bg-dark bg-opacity-75': showNewList}">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">New List</h5>
+            <button type="button" class="btn-close" aria-label="Close" @click="showNewList = false"></button>
+          </div>
+          <div class="modal-body">
+            <form @submit.prevent="addList">
+              <div class="form-group mb-3">
+                <label class="form-label" for="content">List Name</label>
+                <input type="text" id="newName" class="form-control" v-model="listForm.name" required>
               </div>
-              <div class="modal-body">
-                <form @submit.prevent="addList">
-                  <div class="form-group mb-3">
-                    <label class="form-label" for="content">List Name</label>
-                    <input type="text" id="newName" class="form-control" v-model="listForm.name" required>
-                  </div>
-                  <div class="form-group mb-3">
-                    <label class="form-label" for="colorpicker">Color Picker:</label>
-                    <input type="color" id="colorpicker" v-model="listForm.color" >
-                  </div>
-                  <button type="submit" class="btn btn-primary">Add List</button>
-                </form>
+              <div class="form-group mb-3">
+                <label class="form-label" for="colorpicker">Color Picker:</label>
+                <input type="color" id="colorpicker" v-model="listForm.color">
               </div>
-            </div>
+              <button type="submit" class="btn btn-primary">Add List</button>
+            </form>
           </div>
         </div>
+      </div>
+    </div>
 
 
 
@@ -296,8 +310,8 @@
                 <label class="form-label" for="priority">Priority</label>
                 <select class="form-select" v-model="editForm.priority_id" id="priority">
                   <option v-for="priority in priorities" :value="priority.id">{{ priority.level }}</option>
-                </select>        
-            </div>
+                </select>
+              </div>
 
 
               <!-- <div class="form-group mb-3">
@@ -307,9 +321,8 @@
               </div> -->
               <div class="form-group mb-3">
                 <label class="form-label" for="completed">Complete Status</label>
-                <input class="form-check-input" type="checkbox" id="completed" 
-               :checked="editForm.completed === 1"
-                 @change="editForm.completed = $event.target.checked ? 1 : 0">
+                <input class="form-check-input" type="checkbox" id="completed" :checked="editForm.completed === 1"
+                  @change="editForm.completed = $event.target.checked ? 1 : 0">
               </div>
 
               <button type="submit" class="btn btn-primary">Update Task</button>
