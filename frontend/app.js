@@ -354,10 +354,7 @@ const app = Vue.createApp({
         console.log(error)
       }
     },
-    methods: {
-      // ... your other methods ...
-    
-      updateCompletionStatus: async function(task) {
+    updateCompletionStatus: async function(task) {
         try {
             // Prepare data to send to the backend.
             const dataToUpdate = {
@@ -397,10 +394,7 @@ const app = Vue.createApp({
             // Revert the completed value if there's any error
             task.completed = !task.completed ? 1 : 0;
         }
-      }
-    },
-    
-    
+      },
     deleteList: async function (list_id) {
       try {
         const response = await fetch(`${baseUrl}/api/users/${this.user.id}/lists/${list_id}`, {
