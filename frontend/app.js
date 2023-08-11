@@ -190,6 +190,7 @@ const app = Vue.createApp({
 
         const json = await response.json()
         this.tasks.push(json)
+        this.originalTasks = this.tasks
         // clear the taskform
         this.taskForm.content = ''
         this.taskForm.due_date = ''
@@ -465,6 +466,7 @@ const app = Vue.createApp({
     filterTasks() {
       // reset taks to original data
       this.tasks = this.originalTasks;
+      console.log(this.tasks)
 
       const completeStatus = parseInt(this.selectedCompleteStatus);
       const priorityFilter = parseInt(this.selectedPriority);
@@ -477,7 +479,9 @@ const app = Vue.createApp({
       }
 
       if (completeStatus !== -1) {
-        this.tasks = this.tasks.filter(t => t.completed === completeStatus);
+        this.tasks = this.tasks.filter(t => t.completed == completeStatus);
+        
+      console.log(this.tasks)
       }
 
       if (priorityFilter !== -1) {
