@@ -235,6 +235,33 @@ const app = Vue.createApp({
         console.log(error)
       }
     },
+    updateCompletionStatus: async function(task) {
+      try {
+          // 更新task的completed状态
+          const response = await fetch(`${baseUrl}/api/users/${this.user.id}/tasks/${task.id}`, {
+              method: 'put',
+              headers: {
+                  'Content-Type': 'application/json',
+                  'Authorization': `Bearer ${this.token}`
+              },
+              body: JSON.stringify(task)  // 注意，我们使用整个task对象来更新，因为它包含了已经修改的completed字段
+          });
+  
+          const json = await response.json();
+          
+          // 从API响应中更新特定的任务状态
+          var allTasks = this.tasks;
+          for (let i = 0; i < allTasks.length; i++) {
+              if (allTasks[i].id === json.id) {
+                  allTasks[i].completed = json.completed;
+              }
+          }
+  
+      } catch (error) {
+          console.error('Error updating task completion status:', error);
+      }
+  },
+  
     deleteTask: async function (task_id) {
       try {
         const response = await fetch(`${baseUrl}/api/users/${this.user.id}/tasks/${task_id}`, {
@@ -328,6 +355,53 @@ const app = Vue.createApp({
         console.log(error)
       }
     },
+    methods: {
+      // ... your other methods ...
+    
+      updateCompletionStatus: async function(task) {
+        try {
+            // Prepare data to send to the backend.
+            const dataToUpdate = {
+                completed: task.completed ? 1 : 0
+            };
+    
+            // Make the update request
+            const response = await fetch(`${baseUrl}/api/users/${this.user.id}/tasks/${task.id}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${this.token}`
+                },
+                body: JSON.stringify(dataToUpdate)
+            });
+    
+            const json = await response.json();
+    
+            // Check if the response was successful
+            if (response.ok) {
+                // Find the task in your tasks array and update it.
+                var allTasks = this.tasks;
+                for (let i = 0; i < allTasks.length; i++) {
+                    if (allTasks[i].id === json.id) {
+                        allTasks[i].completed = json.completed;
+                        break; // Exit the loop once the task is found and updated.
+                    }
+                }
+            } else {
+                console.error("Failed to update the task completion status:", json);
+                // Revert the completed value if the update failed
+                task.completed = !task.completed ? 1 : 0;
+            }
+    
+        } catch (error) {
+            console.error("An error occurred while updating the task completion status:", error);
+            // Revert the completed value if there's any error
+            task.completed = !task.completed ? 1 : 0;
+        }
+      }
+    },
+    
+    
     deleteList: async function (list_id) {
       try {
         const response = await fetch(`${baseUrl}/api/users/${this.user.id}/lists/${list_id}`, {
