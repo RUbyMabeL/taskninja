@@ -237,26 +237,25 @@ const app = Vue.createApp({
     },
     updateCompletionStatus: async function(task) {
       try {
-          // 更新task的completed状态
+          
           const response = await fetch(`${baseUrl}/api/users/${this.user.id}/tasks/${task.id}`, {
               method: 'put',
               headers: {
                   'Content-Type': 'application/json',
                   'Authorization': `Bearer ${this.token}`
               },
-              body: JSON.stringify(task)  // 注意，我们使用整个task对象来更新，因为它包含了已经修改的completed字段
+              body: JSON.stringify(task)  
           });
   
+          //const json = await response.json();
           const json = await response.json();
           
-          // 从API响应中更新特定的任务状态
           var allTasks = this.tasks;
           for (let i = 0; i < allTasks.length; i++) {
               if (allTasks[i].id === json.id) {
                   allTasks[i].completed = json.completed;
               }
           }
-  
       } catch (error) {
           console.error('Error updating task completion status:', error);
       }
