@@ -59,7 +59,7 @@ const app = Vue.createApp({
   created: async function () {
     this.token = sessionStorage.getItem('token') || ''
     //has an loading error
-    // this.user = JSON.parse(sessionStorage.getItem('user') || {})
+    this.user = JSON.parse(sessionStorage.getItem('user') || {})
 
     this.getLists()
     this.getTasks()
@@ -87,7 +87,7 @@ const app = Vue.createApp({
         this.token = json.token
         this.user = json.user
         sessionStorage.setItem('token', this.token)
-        // sessionStorage.setItem('user', JSON.stringify(json.user))
+        sessionStorage.setItem('user', JSON.stringify(json.user))
         this.getLists()
         this.getTasks()
         this.getPriorities()
@@ -357,45 +357,49 @@ const app = Vue.createApp({
     },
     updateCompletionStatus: async function (task) {
       try {
-        // Prepare data to send to the backend.
-        const dataToUpdate = {
-          completed: task.completed ? 1 : 0
-        };
-
-        // Make the update request
-        const response = await fetch(`${baseUrl}/api/users/${this.user.id}/tasks/${task.id}`, {
-          method: 'PUT',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${this.token}`
-          },
-          body: JSON.stringify(dataToUpdate)
-        });
-
-        const json = await response.json();
-
-        // Check if the response was successful
-        if (response.ok) {
-          // Find the task in your tasks array and update it.
-          var allTasks = this.tasks;
-          for (let i = 0; i < allTasks.length; i++) {
-            if (allTasks[i].id === json.id) {
-              allTasks[i].completed = json.completed;
-              break; // Exit the loop once the task is found and updated.
-            }
+          // Store the current completed status in case we need to revert due to failure.
+          const originalStatus = task.completed;
+  
+          // Prepare data to send to the backend.
+          const dataToUpdate = {
+              completed: task.completed ? 1 : 0
+          };
+  
+          // Make the update request
+          const response = await fetch(`${baseUrl}/api/users/${this.user.id}/tasks/${task.id}`, {
+              method: 'PUT',
+              headers: {
+                  'Content-Type': 'application/json',
+                  'Authorization': `Bearer ${this.token}`
+              },
+              body: JSON.stringify(dataToUpdate)
+          });
+  
+          const json = await response.json();
+  
+          // Check if the response was successful
+          if (response.ok) {
+              // Find the task in your tasks array and update it.
+              var allTasks = this.tasks;
+              for (let i = 0; i < allTasks.length; i++) {
+                  if (allTasks[i].id === json.id) {
+                      allTasks[i].completed = json.completed;
+                      break; // Exit the loop once the task is found and updated.
+                  }
+              }
+          } else {
+              console.error("Failed to update the task completion status:", json);
+              // Revert the completed value if the update failed
+              task.completed = originalStatus;
           }
-        } else {
-          console.error("Failed to update the task completion status:", json);
-          // Revert the completed value if the update failed
-          task.completed = !task.completed ? 1 : 0;
-        }
-
+  
       } catch (error) {
-        console.error("An error occurred while updating the task completion status:", error);
-        // Revert the completed value if there's any error
-        task.completed = !task.completed ? 1 : 0;
+          console.error("An error occurred while updating the task completion status:", error);
+          // Revert the completed value if there's any error
+          task.completed = originalStatus;
       }
-    },
+  },
+  
     deleteList: async function (list_id) {
       try {
         const response = await fetch(`${baseUrl}/api/users/${this.user.id}/lists/${list_id}`, {
@@ -447,6 +451,7 @@ const app = Vue.createApp({
 
     logout: async function () {
       this.token = ''
+      this.resetFilters()
       this.user = {}
     },
 
