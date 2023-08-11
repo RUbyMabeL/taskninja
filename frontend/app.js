@@ -37,9 +37,9 @@ const app = Vue.createApp({
       listForm: {
         user_id: '',
         name: '',
-        color:'',
+        color: '',
       },
-      
+
       editForm: {
         id: '',
         content: '',
@@ -52,7 +52,7 @@ const app = Vue.createApp({
         id: '',
         name: '',
         user_id: '',
-        color:'',
+        color: '',
       }
     }
   },
@@ -60,7 +60,7 @@ const app = Vue.createApp({
     this.token = sessionStorage.getItem('token') || ''
     //has an loading error
     // this.user = JSON.parse(sessionStorage.getItem('user') || {})
-    
+
     this.getLists()
     this.getTasks()
     this.getPriorities()
@@ -118,7 +118,7 @@ const app = Vue.createApp({
           },
           body: JSON.stringify(this.registerForm)
         })
-        
+
         this.showRegisterForm = false
         this.RegisterSuccess = true
         // clear the Registerform
@@ -193,7 +193,7 @@ const app = Vue.createApp({
         // clear the taskform
         this.taskForm.content = ''
         this.taskForm.due_date = ''
-        this.taskForm.priority = ''
+        this.taskForm.priority_id = 0
         this.taskForm.list_id = ''
 
         this.showNewTask = false
@@ -235,32 +235,32 @@ const app = Vue.createApp({
         console.log(error)
       }
     },
-    updateCompletionStatus: async function(task) {
+    updateCompletionStatus: async function (task) {
       try {
-          
-          const response = await fetch(`${baseUrl}/api/users/${this.user.id}/tasks/${task.id}`, {
-              method: 'put',
-              headers: {
-                  'Content-Type': 'application/json',
-                  'Authorization': `Bearer ${this.token}`
-              },
-              body: JSON.stringify(task)  
-          });
-  
-          //const json = await response.json();
-          const json = await response.json();
-          
-          var allTasks = this.tasks;
-          for (let i = 0; i < allTasks.length; i++) {
-              if (allTasks[i].id === json.id) {
-                  allTasks[i].completed = json.completed;
-              }
+
+        const response = await fetch(`${baseUrl}/api/users/${this.user.id}/tasks/${task.id}`, {
+          method: 'put',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${this.token}`
+          },
+          body: JSON.stringify(task)
+        });
+
+        //const json = await response.json();
+        const json = await response.json();
+
+        var allTasks = this.tasks;
+        for (let i = 0; i < allTasks.length; i++) {
+          if (allTasks[i].id === json.id) {
+            allTasks[i].completed = json.completed;
           }
+        }
       } catch (error) {
-          console.error('Error updating task completion status:', error);
+        console.error('Error updating task completion status:', error);
       }
-  },
-  
+    },
+
     deleteTask: async function (task_id) {
       try {
         const response = await fetch(`${baseUrl}/api/users/${this.user.id}/tasks/${task_id}`, {
@@ -354,47 +354,47 @@ const app = Vue.createApp({
         console.log(error)
       }
     },
-    updateCompletionStatus: async function(task) {
-        try {
-            // Prepare data to send to the backend.
-            const dataToUpdate = {
-                completed: task.completed ? 1 : 0
-            };
-    
-            // Make the update request
-            const response = await fetch(`${baseUrl}/api/users/${this.user.id}/tasks/${task.id}`, {
-                method: 'PUT',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${this.token}`
-                },
-                body: JSON.stringify(dataToUpdate)
-            });
-    
-            const json = await response.json();
-    
-            // Check if the response was successful
-            if (response.ok) {
-                // Find the task in your tasks array and update it.
-                var allTasks = this.tasks;
-                for (let i = 0; i < allTasks.length; i++) {
-                    if (allTasks[i].id === json.id) {
-                        allTasks[i].completed = json.completed;
-                        break; // Exit the loop once the task is found and updated.
-                    }
-                }
-            } else {
-                console.error("Failed to update the task completion status:", json);
-                // Revert the completed value if the update failed
-                task.completed = !task.completed ? 1 : 0;
+    updateCompletionStatus: async function (task) {
+      try {
+        // Prepare data to send to the backend.
+        const dataToUpdate = {
+          completed: task.completed ? 1 : 0
+        };
+
+        // Make the update request
+        const response = await fetch(`${baseUrl}/api/users/${this.user.id}/tasks/${task.id}`, {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${this.token}`
+          },
+          body: JSON.stringify(dataToUpdate)
+        });
+
+        const json = await response.json();
+
+        // Check if the response was successful
+        if (response.ok) {
+          // Find the task in your tasks array and update it.
+          var allTasks = this.tasks;
+          for (let i = 0; i < allTasks.length; i++) {
+            if (allTasks[i].id === json.id) {
+              allTasks[i].completed = json.completed;
+              break; // Exit the loop once the task is found and updated.
             }
-    
-        } catch (error) {
-            console.error("An error occurred while updating the task completion status:", error);
-            // Revert the completed value if there's any error
-            task.completed = !task.completed ? 1 : 0;
+          }
+        } else {
+          console.error("Failed to update the task completion status:", json);
+          // Revert the completed value if the update failed
+          task.completed = !task.completed ? 1 : 0;
         }
-      },
+
+      } catch (error) {
+        console.error("An error occurred while updating the task completion status:", error);
+        // Revert the completed value if there's any error
+        task.completed = !task.completed ? 1 : 0;
+      }
+    },
     deleteList: async function (list_id) {
       try {
         const response = await fetch(`${baseUrl}/api/users/${this.user.id}/lists/${list_id}`, {
@@ -449,7 +449,7 @@ const app = Vue.createApp({
       this.user = {}
     },
 
-    getListName: function(listId) {
+    getListName: function (listId) {
       const list = this.lists.find(list => list.id === listId);
       return list ? list.name : 'List Not Found';
     },
@@ -460,9 +460,9 @@ const app = Vue.createApp({
     },
     getListColor(listId) {
       const list = this.lists.find(list => list.id === listId);
-      return list ? list.color : '#808080'; 
+      return list ? list.color : '#808080';
     },
-    filterTasks(){
+    filterTasks() {
       // reset taks to original data
       this.tasks = this.originalTasks;
 

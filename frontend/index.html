@@ -19,13 +19,14 @@
       height: auto;
       opacity: 0.7;
     }
+
     .card-footer {
-    border-radius: 25px;
-}
-   .card-body {
-    border-radius: 5px;
-}
- 
+      border-radius: 25px;
+    }
+
+    .card-body {
+      border-radius: 5px;
+    }
   </style>
 
 </head>
@@ -119,38 +120,37 @@
     </div>
 
 
-   
+
     <!-- Display Tasks if user is logged in -->
-<div class="row" v-if="token">
-  <div class="col-12 col-xl-4 p-3" v-for="task in tasks">
-      <div class="card">
-          <div class="card-header d-flex justify-content-between p-3" :style="{ backgroundColor: 'white', color: 'black' }">
-              <div class="d-flex align-items-center">
-                  <button class="btn btn-outline-secondary me-3" @click="editTask(task)">Edit</button>
-                  <button class="btn btn-outline-danger" @click="deleteTask(task.id)">Delete</button>
-              </div>
-              <div class="d-flex align-items-center">
-                  <button class="btn btn-outline-warning me-3" 
-                          :style="{ backgroundColor: getListColor(task.list_id), color: 'white', border: 'none'}">
-                      {{ getListName(task.list_id) }}
-                  </button>
-              </div>
+    <div class="row" v-if="token">
+      <div class="col-12 col-xl-4 p-3" v-for="task in tasks">
+        <div class="card">
+          <div class="card-header d-flex justify-content-between p-3"
+            :style="{ backgroundColor: 'white', color: 'black' }">
+            <div class="d-flex align-items-center">
+              <button class="btn btn-outline-secondary me-3" @click="editTask(task)">Edit</button>
+              <button class="btn btn-outline-danger" @click="deleteTask(task.id)">Delete</button>
+            </div>
+            <div class="d-flex align-items-center">
+              <button class="btn btn-outline-warning me-3"
+                :style="{ backgroundColor: getListColor(task.list_id), color: 'white', border: 'none'}">
+                {{ getListName(task.list_id) }}
+              </button>
+            </div>
           </div>
           <div class="card-body" :style="{ backgroundColor: getListColor(task.list_id),color: 'white' }">
-              <p class="card-text">Task: {{ task.content }}</p>
-              <p class="card-text">Priority: {{ getPriorityName(task.priority_id) }}</p>
-              <p class="card-text">Due Date: {{ task.due_date }}</p>
-              <p class="card-text">
-                  Completed: 
-                  <input 
-                      type="checkbox" 
-                      :checked="task.completed === 1" 
-                      @change="task.completed = $event.target.checked ? 1 : 0; updateCompletionStatus(task)">
-              </p>
+            <p class="card-text">Task: {{ task.content }}</p>
+            <p class="card-text">Priority: {{ getPriorityName(task.priority_id) }}</p>
+            <p class="card-text">Due Date: {{ task.due_date }}</p>
+            <p class="card-text">
+              Completed:
+              <input type="checkbox" :checked="task.completed === 1"
+                @change="task.completed = $event.target.checked ? 1 : 0; updateCompletionStatus(task)">
+            </p>
           </div>
+        </div>
       </div>
-  </div>
-</div>
+    </div>
 
 
     <!-- Display login if user is not logged in -->
